@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string" />
+                            <xsd:attribute name="type" type="xsd:string" />
+                            <xsd:attribute name="mimetype" type="xsd:string" />
+                            <xsd:attribute ref="xml:space" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string" />
+                            <xsd:attribute name="name" type="xsd:string" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"
+                                    msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0"
+                                    msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string" />
+                            <xsd:attribute name="type" type="xsd:string" />
+                            <xsd:attribute name="mimetype" type="xsd:string" />
+                            <xsd:attribute ref="xml:space" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"
+                                    msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+
+    <!-- Validation Resource Messages -->
+    <!-- Error Messages -->
+    <data name="OneOrMoreValidationErrorsOccured" xml:space="preserve">
+        <value>One or more validation errors occured.</value>
+    </data>
+    <data name="NameCannotBeEmpty" xml:space="preserve">
+        <value>The Name field cannot be empty.</value>
+    </data>
+    <data name="WktCannotBeEmpty" xml:space="preserve">
+        <value>The Wkt field cannot be empty.</value>
+    </data>
+    <data name="PageSizeAndPageNumberMustBeProvidedTogether" xml:space="preserve">
+        <value>Both pageSize and pageNumber must be provided together.</value>
+    </data>
+    <data name="PageSizeAndPageNumberMustBeGreaterThanZero" xml:space="preserve">
+        <value>Both pageSize and pageNumber must be greater than zero.</value>
+    </data>
+    <data name="FeatureDataCannotBeNull" xml:space="preserve">
+        <value>Feature data cannot be null.</value>
+    </data>
+    <data name="InvalidId" xml:space="preserve">
+        <value>Invalid feature ID</value>
+    </data>
+    <!-- ___________ -->
+
+    <!-- Features Service Messages -->
+    <!-- Error Messages -->
+    <data name="FeatureNotFound" xml:space="preserve">
+        <value>Feature not found.</value>
+    </data>
+    <data name="FeatureDeletionFailed" xml:space="preserve">
+        <value>Feature deletion failed.</value>
+    </data>
+    <!-- Success Messages -->
+    <data name="FeaturesRetrievedSuccessfully" xml:space="preserve">
+        <value>Features retrieved successfully.</value>
+    </data>
+    <data name="FeatureCreatedSuccessfully" xml:space="preserve">
+        <value>Feature created successfully.</value>
+    </data>
+    <data name="FeaturesCreatedSuccessfully" xml:space="preserve">
+        <value>Features created successfully.</value>
+    </data>
+    <data name="FeatureUpdatedSuccessfully" xml:space="preserve">
+        <value>Feature updated successfully.</value>
+    </data>
+    <data name="FeatureDeletedSuccessfully" xml:space="preserve">
+        <value>Feature deleted successfully.</value>
+    </data>
+    <!-- ___________ -->
+
+    <!-- Database Messages-->
+    <!-- Errore Messages -->
+    <data name="DatabaseError" xml:space="preserve">
+        <value>Database error occurred: {0}</value>
+    </data>
+
+    <!-- Generic Messages -->
+    <!-- Error Messages -->
+    <data name="UnexpectedError" xml:space="preserve">
+        <value>An error occurred while processing your request: {0}</value>
+    </data>
+
+</root>
