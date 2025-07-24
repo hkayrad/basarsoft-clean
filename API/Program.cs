@@ -56,6 +56,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 // ---------------
 
+builder.Services.AddCors();
 builder.Services.AddOpenApi();
 
 builder.Services.AddSwaggerGen(config =>
@@ -87,6 +88,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "https://localhost:3000"));
 
 app.MapControllers();
 

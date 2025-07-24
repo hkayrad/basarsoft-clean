@@ -1,0 +1,146 @@
+#map {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    z-index: 2;
+    width: fit-content;
+}
+
+#mouse-pos {
+    bottom: 10px;
+    left: 10px;
+}
+
+#controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* MUI-style button base */
+#controls button {
+    min-width: 64px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    border: none;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.75;
+    letter-spacing: 0.02857em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+        box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+        border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+        color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    background-color: #1976d2;
+    color: #fff;
+}
+
+/* MUI button hover effect */
+#controls button:hover {
+    background-color: #1565c0;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+        0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+        0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+/* MUI button active/pressed effect */
+#controls button:active {
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+        0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+/* MUI button focus effect */
+#controls button:focus {
+    outline: none;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12),
+        0 0 0 3px rgba(25, 118, 210, 0.2);
+}
+
+/* MUI button disabled state */
+#controls button:disabled {
+    color: rgba(0, 0, 0, 0.26);
+    box-shadow: none;
+    background-color: rgba(0, 0, 0, 0.12);
+    cursor: default;
+}
+
+/* MUI-style select base */
+#controls select {
+    min-width: 120px;
+    padding: 5px 32px 5px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 4px;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 1rem;
+    line-height: 1.4375em;
+    background-color: white;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23666' d='m0 1 2 2 2-2z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    cursor: pointer;
+    transition: border-color 200ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* MUI select hover effect */
+#controls select:hover {
+    border-color: rgba(0, 0, 0, 0.87);
+}
+
+/* MUI select focus effect */
+#controls select:focus {
+    outline: none;
+    border-color: #1976d2;
+    padding: 5px 31px 5px 11px; /* Adjust padding to compensate for thicker border */
+}
+
+/* MUI select disabled state */
+#controls select:disabled {
+    color: rgba(0, 0, 0, 0.26);
+    border-color: rgba(0, 0, 0, 0.12);
+    background-color: rgba(0, 0, 0, 0.02);
+    cursor: default;
+}
+
+/* Style select options */
+#controls select option {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 1rem;
+    padding: 8px 12px;
+    background-color: white;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+#controls #draw-select {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#saveDialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    z-index: 1000;
+}

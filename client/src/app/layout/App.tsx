@@ -1,0 +1,29 @@
+import { useEffect, useState } from "react";
+import { Outlet } from "react-router";
+import agent from "../lib/agent";
+import FeaturesContext from "../lib/context/featureContext";
+
+export default function App() {
+    const [features, setFeatures] = useState<FeatureDto[]>([]);
+
+    const fetchFeatures = async () => {
+        try {
+            const response = await agent.get("/features");
+            setFeatures(response.data.data);
+            console.log("Fetched features:");
+            console.table(response.data.data);
+        } catch (error) {
+            console.error("Failed to fetch features:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchFeatures();
+    }, []);
+
+    return (
+        <FeaturesContext.Provider value={{ features, setFeatures }}>
+            <Outlet />
+        </FeaturesContext.Provider>
+    );
+}
