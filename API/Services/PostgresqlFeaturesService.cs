@@ -20,7 +20,6 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
 
         try
         {
-            var reader = new NetTopologySuite.IO.WKTReader();
             var newFeature = new Feature
             {
                 Name = addFeatureDto.Name,
@@ -50,7 +49,6 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
         {
             await _unitOfWork.BeginTransactionAsync();
 
-            var reader = new NetTopologySuite.IO.WKTReader();
             List<Feature> features = new();
 
             foreach (var addFeatureDto in addFeatureDtos)
@@ -148,7 +146,6 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
 
         try
         {
-            var reader = new NetTopologySuite.IO.WKTReader();
             var existingFeature = await _unitOfWork.FeaturesRepository.GetByIdAsync(id);
 
             if (existingFeature == null)
