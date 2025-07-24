@@ -1,4 +1,4 @@
-import { View, Map, Feature } from "ol";
+import { View, Map, Feature, Overlay } from "ol";
 import "./map.css";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
@@ -24,6 +24,7 @@ export default function MapComponent() {
     const featuresLayerRef = useRef<VectorLayer | null>(null);
     const drawSourceRef = useRef<VectorSource | null>(null);
     const mapDivRef = useRef<HTMLDivElement | null>(null);
+    const tooltipRef = useRef<HTMLDivElement | null>(null);
 
     const [map, setMap] = useState<Map | null>(null);
     const [drawType, setDrawType] = useState<string>("Point");
@@ -78,6 +79,41 @@ export default function MapComponent() {
             layers: [tileLayer, drawLayer],
             view: view,
             controls: defaultControls().extend([mousePosControl]),
+        });
+
+        const tooltip = new Overlay({
+            element: tooltipRef.current as HTMLDivElement,
+            offset: [15, 0],
+            positioning: "center-left",
+        });
+
+        map.addOverlay(tooltip);
+
+        map.on("pointermove", (event) => {
+            const hoveredFeature = map.forEachFeatureAtPixel(
+                event.pixel,
+                (feature) => feature
+            );
+
+            if (hoveredFeature && featuresLayerRef.current) {
+                const featureName =
+                    hoveredFeature.get("name") || "Unknown Feature";
+                const featureId = hoveredFeature.get("id") || "";
+
+                if (tooltipRef.current) {
+                    tooltipRef.current.style.display = "flex";
+                    tooltipRef.current.innerHTML = `
+                        <p><strong>${featureName}</strong></p><br />
+                        ID: ${featureId}
+                    `;
+                }
+                tooltip.setPosition(event.coordinate);
+            } else {
+                if (tooltipRef.current) {
+                    tooltipRef.current.style.display = "none";
+                }
+                tooltip.setPosition(undefined);
+            }
         });
 
         setMap(map);
@@ -231,7 +267,6 @@ export default function MapComponent() {
                     </button>
                 </div>
             </div>
-
             {isSaveDialogOpen && (
                 <div id="saveDialog" className="overlay">
                     <input
@@ -244,8 +279,9 @@ export default function MapComponent() {
                     <button onClick={toggleSaveDialog}>Cancel</button>
                 </div>
             )}
-
             <div id="mouse-pos" className="overlay"></div>
+            <div id="tooltip" ref={tooltipRef} className="overlay"></div>{" "}
+            {/* NIYE GOZUKMUYO MK */}
             <div id="map-extent" className="overlay"></div>
             <div id="map" ref={mapDivRef}></div>
         </>
