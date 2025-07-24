@@ -16,6 +16,7 @@ import { defaults as defaultControls } from "ol/control";
 import Draw from "ol/interaction/Draw";
 import type { Type } from "ol/geom/Geometry";
 import type Geometry from "ol/geom/Geometry";
+import { saveFeature } from "../../../lib/api/agent";
 
 export default function MapComponent() {
     const { features } = useContext(FeaturesContext);
@@ -27,11 +28,13 @@ export default function MapComponent() {
     const [map, setMap] = useState<Map | null>(null);
     const [drawType, setDrawType] = useState<string>("Point");
     const [newFeatureName, setNewFeatureName] = useState<string>("");
+    const [newWkt, setNewWkt] = useState<string[]>([]);
 
     const [isFeatureLayerOpen, setIsFeatureLayerOpen] = useState(true);
     const [isDrawMode, setIsDrawMode] = useState(false);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const format = new WKT();
 
     useEffect(() => {
@@ -129,9 +132,8 @@ export default function MapComponent() {
         draw.on("drawend", (event) => {
             const feature = event.feature;
             const geometry = feature.getGeometry();
-            const wkt = format.writeGeometry(geometry as Geometry);
-            // Here you would typically save the feature to your backend or state
-            console.log("New Feature WKT:", wkt);
+            const wkt: string = format.writeGeometry(geometry as Geometry);
+            setNewWkt((prev) => [...prev, wkt]);
         });
 
         return () => {
@@ -141,18 +143,45 @@ export default function MapComponent() {
         };
     }, [map, isDrawMode, drawType, format]);
 
-    const toggleDrawMode = () => {
-        setIsDrawMode(!isDrawMode);
+    const startDrawing = () => {
+        setIsDrawMode(true);
+    };
+
+    const stopDrawing = () => {
+        setIsDrawMode(false);
+        toggleSaveDialog();
     };
 
     const toggleFeatureLayer = () => setIsFeatureLayerOpen(!isFeatureLayerOpen);
 
     const toggleSaveDialog = () => setIsSaveDialogOpen(!isSaveDialogOpen);
 
-    const handleDrawTypeChange = (
-        event: React.ChangeEvent<HTMLSelectElement>
+    const handleDrawTypeChange: React.ChangeEventHandler<HTMLInputElement> = (
+        event
     ) => {
         setDrawType(event.target.value);
+    };
+
+    const handleSaveFeature = async () => {
+        const newFeature: FeatureDto = {
+            name: newFeatureName,
+            wkt:
+                newWkt.length > 0
+                    ? newWkt.length == 1
+                        ? newWkt[0]
+                        : `GEOMETRYCOLLECTION(${newWkt.join(", ")})`
+                    : "",
+        };
+        if (newFeature.wkt) {
+            await saveFeature(newFeature);
+            console.log("Feature saved:", newFeature);
+        } else {
+            console.error("No valid geometry to save.");
+        }
+
+        setNewFeatureName("");
+        setNewWkt([]);
+        toggleSaveDialog();
     };
 
     return (
@@ -194,7 +223,10 @@ export default function MapComponent() {
                             Polygon
                         </label>
                     </div>
-                    <button id="draw" onClick={toggleDrawMode}>
+                    <button
+                        id="draw"
+                        onClick={isDrawMode ? stopDrawing : startDrawing}
+                    >
                         {isDrawMode ? "Finish Drawing" : "Start Drawing"}
                     </button>
                 </div>
@@ -208,7 +240,8 @@ export default function MapComponent() {
                         value={newFeatureName}
                         onChange={(e) => setNewFeatureName(e.target.value)}
                     />
-                    <button>Save Feature</button>
+                    <button onClick={handleSaveFeature}>Save Feature</button>
+                    <button onClick={toggleSaveDialog}>Cancel</button>
                 </div>
             )}
 

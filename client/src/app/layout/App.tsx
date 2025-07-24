@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
-import agent from "../lib/agent";
+import { agent } from "../lib/api/agent";
 import FeaturesContext from "../lib/context/featureContext";
 
 export default function App() {
