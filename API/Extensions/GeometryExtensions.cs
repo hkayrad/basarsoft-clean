@@ -6,8 +6,8 @@ namespace API.Extensions;
 
 public static class GeometryExtensions
 {
-    private static readonly WKTReader _reader = new WKTReader();
-    private static readonly WKTWriter _writer = new WKTWriter();
+    private static readonly WKTReader _reader = new();
+    private static readonly WKTWriter _writer = new();
 
     public static Geometry ToGeometry(this string wkt)
     {
