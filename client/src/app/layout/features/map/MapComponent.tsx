@@ -13,12 +13,26 @@ import type { Units } from "ol/proj/Units";
 import MousePosition from "ol/control/MousePosition";
 import { createStringXY } from "ol/coordinate";
 import { defaults as defaultControls } from "ol/control";
+import Draw from "ol/interaction/Draw";
+import type { Type } from "ol/geom/Geometry";
+import type Geometry from "ol/geom/Geometry";
 
 export default function MapComponent() {
     const { features } = useContext(FeaturesContext);
-    const [map, setMap] = useState<Map | null>(null);
+
     const featuresLayerRef = useRef<VectorLayer | null>(null);
+    const drawSourceRef = useRef<VectorSource | null>(null);
+    const mapDivRef = useRef<HTMLDivElement | null>(null);
+
+    const [map, setMap] = useState<Map | null>(null);
+    const [drawType, setDrawType] = useState<string>("Point");
+    const [newFeatureName, setNewFeatureName] = useState<string>("");
+
     const [isFeatureLayerOpen, setIsFeatureLayerOpen] = useState(true);
+    const [isDrawMode, setIsDrawMode] = useState(false);
+    const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+
+    const format = new WKT();
 
     useEffect(() => {
         const MAP_CONFIG = {
@@ -47,9 +61,18 @@ export default function MapComponent() {
             source: new OSM(),
         });
 
+        const drawSource = new VectorSource({
+            wrapX: false,
+        });
+        drawSourceRef.current = drawSource;
+
+        const drawLayer = new VectorLayer({
+            source: drawSourceRef.current,
+        });
+
         const map = new Map({
-            target: "map",
-            layers: [tileLayer],
+            target: mapDivRef.current as HTMLDivElement,
+            layers: [tileLayer, drawLayer],
             view: view,
             controls: defaultControls().extend([mousePosControl]),
         });
@@ -64,8 +87,6 @@ export default function MapComponent() {
     }, []);
 
     useEffect(() => {
-        const format = new WKT();
-
         if (map && features.length > 0) {
             if (featuresLayerRef.current)
                 map.removeLayer(featuresLayerRef.current);
@@ -89,10 +110,49 @@ export default function MapComponent() {
                 map.addLayer(featuresLayer);
             }
         }
-    }, [features, map, isFeatureLayerOpen]);
+    }, [features, map, isFeatureLayerOpen, format]);
 
-    const toggleFeatureLayer = () => {
-        setIsFeatureLayerOpen(!isFeatureLayerOpen);
+    useEffect(() => {
+        const draw = new Draw({
+            source: drawSourceRef.current as VectorSource,
+            type: drawType as Type,
+        });
+
+        if (map) {
+            if (isDrawMode) {
+                map.addInteraction(draw);
+            } else {
+                map.removeInteraction(draw);
+            }
+        }
+
+        draw.on("drawend", (event) => {
+            const feature = event.feature;
+            const geometry = feature.getGeometry();
+            const wkt = format.writeGeometry(geometry as Geometry);
+            // Here you would typically save the feature to your backend or state
+            console.log("New Feature WKT:", wkt);
+        });
+
+        return () => {
+            if (map && isDrawMode) {
+                map.removeInteraction(draw);
+            }
+        };
+    }, [map, isDrawMode, drawType, format]);
+
+    const toggleDrawMode = () => {
+        setIsDrawMode(!isDrawMode);
+    };
+
+    const toggleFeatureLayer = () => setIsFeatureLayerOpen(!isFeatureLayerOpen);
+
+    const toggleSaveDialog = () => setIsSaveDialogOpen(!isSaveDialogOpen);
+
+    const handleDrawTypeChange = (
+        event: React.ChangeEvent<HTMLSelectElement>
+    ) => {
+        setDrawType(event.target.value);
     };
 
     return (
@@ -102,16 +162,59 @@ export default function MapComponent() {
                     {isFeatureLayerOpen ? "Hide" : "Show"} Features
                 </button>
                 <div id="draw-select">
-                    <select id="draw-type">
-                        <option value="point">Point</option>
-                        <option value="line">Line</option>
-                        <option value="polygon">Polygon</option>
-                    </select>
-                    <button id="draw">Draw</button>
+                    <div>
+                        <label>
+                            <input
+                                type="radio"
+                                name="drawType"
+                                value="Point"
+                                checked={drawType === "Point"}
+                                onChange={handleDrawTypeChange}
+                            />
+                            Point
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="drawType"
+                                value="LineString"
+                                checked={drawType === "LineString"}
+                                onChange={handleDrawTypeChange}
+                            />
+                            LineString
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="drawType"
+                                value="Polygon"
+                                checked={drawType === "Polygon"}
+                                onChange={handleDrawTypeChange}
+                            />
+                            Polygon
+                        </label>
+                    </div>
+                    <button id="draw" onClick={toggleDrawMode}>
+                        {isDrawMode ? "Finish Drawing" : "Start Drawing"}
+                    </button>
                 </div>
             </div>
+
+            {isSaveDialogOpen && (
+                <div id="saveDialog" className="overlay">
+                    <input
+                        type="text"
+                        placeholder="Feature Name"
+                        value={newFeatureName}
+                        onChange={(e) => setNewFeatureName(e.target.value)}
+                    />
+                    <button>Save Feature</button>
+                </div>
+            )}
+
             <div id="mouse-pos" className="overlay"></div>
-            <div id="map"></div>
+            <div id="map-extent" className="overlay"></div>
+            <div id="map" ref={mapDivRef}></div>
         </>
     );
 }
