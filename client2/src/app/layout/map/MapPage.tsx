@@ -8,10 +8,12 @@ import type VectorSource from "ol/source/Vector";
 import ControlComponent from "./ControlComponent";
 import DataComponent from "./DataComponent";
 import type { WktFeature } from "../../../types";
+import type Draw from "ol/interaction/Draw";
 
 export default function MapPage() {
     const mapRef = useRef<HTMLDivElement>(null!);
     const drawSourceRef = useRef<VectorSource>(null!);
+    const drawRef = useRef<Draw>(null!);
 
     const [map, setMap] = useState<Map | null>(null);
     const [drawType, setDrawType] = useState<
@@ -51,6 +53,7 @@ export default function MapPage() {
                     drawSourceRef={drawSourceRef}
                     isFeatureLayerVisible={isFeatureLayerVisible}
                     setIsFeatureLayerVisible={setIsFeatureLayerVisible}
+                    drawRef={drawRef}
                 />
                 <DrawComponent
                     map={map}
@@ -60,6 +63,7 @@ export default function MapPage() {
                     isFreehand={isFreehand}
                     newFeatureWkt={newFeatureWkt}
                     setNewFeatureWkt={setNewFeatureWkt}
+                    drawRef={drawRef}
                 />
             </MapComponent>
         </>

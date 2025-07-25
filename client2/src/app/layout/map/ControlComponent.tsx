@@ -10,9 +10,11 @@ import {
     EyeClosed,
     Layers2,
     ChevronRight,
+    Undo,
 } from "lucide-react";
 import type VectorSource from "ol/source/Vector";
 import { useState } from "react";
+import type Draw from "ol/interaction/Draw";
 
 type Props = {
     map: Map | null;
@@ -27,6 +29,7 @@ type Props = {
     drawSourceRef: React.RefObject<VectorSource>;
     isFeatureLayerVisible: boolean;
     setIsFeatureLayerVisible: (isVisible: boolean) => void;
+    drawRef: React.RefObject<Draw>;
 };
 
 export default function ControlComponent(props: Props) {
@@ -43,6 +46,7 @@ export default function ControlComponent(props: Props) {
         drawSourceRef,
         isFeatureLayerVisible,
         setIsFeatureLayerVisible,
+        drawRef,
     } = props;
 
     const [isControlsVisible, setIsControlsVisible] = useState(true);
@@ -76,6 +80,10 @@ export default function ControlComponent(props: Props) {
 
     const handleFeatureLayerToggle = () => {
         setIsFeatureLayerVisible(!isFeatureLayerVisible);
+    };
+
+    const handleUndoDrawing = () => {
+        drawRef.current?.removeLastPoint();
     };
 
     const toggleControlsVisibility = () => {
@@ -170,6 +178,9 @@ export default function ControlComponent(props: Props) {
                     <div id="drawing-controls">
                         <button id="save-draw" onClick={handleSaveDrawing}>
                             <Check size={16} />
+                        </button>
+                        <button id="undo-draw" onClick={handleUndoDrawing}>
+                            <Undo size={16} />
                         </button>
                         <button id="cancel-draw" onClick={handleCancelDrawing}>
                             <X size={16} />

@@ -56,7 +56,6 @@
   transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
 }
 #controls button {
-  min-width: 64px;
   padding: 10px 18px;
   border-radius: 8px;
   border: 1px solid #6a6a6a;

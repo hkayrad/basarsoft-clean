@@ -13,6 +13,7 @@ type Props = {
     isFreehand: boolean;
     newFeatureWkt?: string[];
     setNewFeatureWkt?: (wkt: string[]) => void;
+    drawRef: React.RefObject<Draw>;
 };
 
 export default function DrawComponent(props: Props) {
@@ -24,6 +25,7 @@ export default function DrawComponent(props: Props) {
         isFreehand,
         newFeatureWkt,
         setNewFeatureWkt,
+        drawRef,
     } = props;
 
     useEffect(() => {
@@ -63,6 +65,8 @@ export default function DrawComponent(props: Props) {
                 freehand: isFreehand,
             });
 
+            drawRef.current = draw;
+
             if (isDrawMode) map.addInteraction(draw);
 
             draw.on("drawend", (event) => {
@@ -87,6 +91,7 @@ export default function DrawComponent(props: Props) {
         isFreehand,
         setNewFeatureWkt,
         newFeatureWkt,
+        drawRef,
     ]);
 
     return null;
