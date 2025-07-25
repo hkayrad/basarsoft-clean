@@ -1,5 +1,5 @@
-export type Feature = {
+export type WktFeature = {
     id?: number;
     name: string;
-    wkt: strin;
+    wkt: string;
 }

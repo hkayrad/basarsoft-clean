@@ -7,18 +7,18 @@ import { Projection } from "ol/proj";
 import { createStringXY } from "ol/coordinate";
 import MousePosition from "ol/control/MousePosition";
 import { defaults as defaultControls } from "ol/control";
-import VectorSource from "ol/source/Vector";
-import VectorLayer from "ol/layer/Vector";
+import type { WktFeature as WktFeature } from "../../../types";
+import loadFeatureData from "../../../lib/helpers/loadFeatureData";
 
 type Props = {
     mapRef: React.RefObject<HTMLDivElement>;
-    drawSourceRef: React.RefObject<VectorSource>;
     setMap: (map: Map | null) => void;
     children?: React.ReactNode;
+    setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>;
 };
 
 export default function MapComponent(props: Props) {
-    const { mapRef, drawSourceRef, setMap, children } = props;
+    const { mapRef, setMap, children, setWktFeatures } = props;
 
     useEffect(() => {
         const MAP_CONFIG = {
@@ -34,7 +34,7 @@ export default function MapComponent(props: Props) {
             coordinateFormat: createStringXY(4),
             projection: MAP_CONFIG.projection.code,
             className: "mouse-position",
-            target: document.getElementById("mouse-position") as HTMLElement
+            target: document.getElementById("mouse-position") as HTMLElement,
         });
 
         const view = new View({
@@ -47,24 +47,17 @@ export default function MapComponent(props: Props) {
             source: new OSM(),
         });
 
-        const drawSource = new VectorSource({
-            wrapX: false,
-        });
-        drawSourceRef.current = drawSource;
-
-        const drawLayer = new VectorLayer({
-            source: drawSourceRef.current,
-        });
-
         const map = new Map({
             target: mapRef.current,
             view: view,
-            layers: [tileLayer, drawLayer],
+            layers: [tileLayer],
             controls: defaultControls().extend([mousePosControl]),
         });
 
+        loadFeatureData(setWktFeatures);
+
         setMap(map);
-    }, [drawSourceRef, mapRef, setMap]);
+    }, [mapRef, setMap, setWktFeatures]);
 
     return (
         <>

@@ -7,6 +7,7 @@ import DrawComponent from "./DrawComponent";
 import type VectorSource from "ol/source/Vector";
 import ControlComponent from "./ControlComponent";
 import DataComponent from "./DataComponent";
+import type { WktFeature } from "../../../types";
 
 export default function MapPage() {
     const mapRef = useRef<HTMLDivElement>(null!);
@@ -17,6 +18,7 @@ export default function MapPage() {
         "Point" | "LineString" | "Polygon"
     >("Point");
     const [newFeatureWkt, setNewFeatureWkt] = useState<string[]>([]);
+    const [wktFeatures, setWktFeatures] = useState<WktFeature[]>([]);
 
     const [isDrawMode, setIsDrawMode] = useState(false);
     const [isFreehand, setIsFreehand] = useState(false);
@@ -27,10 +29,15 @@ export default function MapPage() {
             <div id="mouse-position" className="mouse-position"></div>
             <MapComponent
                 mapRef={mapRef}
-                drawSourceRef={drawSourceRef}
                 setMap={setMap}
+                setWktFeatures={setWktFeatures}
             >
-                <DataComponent map={map} />
+                <DataComponent
+                    map={map}
+                    wktFeatures={wktFeatures}
+                    setWktFeatures={setWktFeatures}
+                    isFeatureLayerVisible={isFeatureLayerVisible}
+                />
                 <ControlComponent
                     map={map}
                     isDrawMode={isDrawMode}

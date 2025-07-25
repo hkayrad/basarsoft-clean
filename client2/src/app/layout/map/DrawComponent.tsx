@@ -1,8 +1,9 @@
 import type Map from "ol/Map";
 import { useEffect } from "react";
 import Draw from "ol/interaction/Draw";
-import type VectorSource from "ol/source/Vector";
+import VectorSource from "ol/source/Vector";
 import { WKT } from "ol/format";
+import VectorLayer from "ol/layer/Vector";
 
 type Props = {
     map: Map | null;
@@ -25,14 +26,39 @@ export default function DrawComponent(props: Props) {
         setNewFeatureWkt,
     } = props;
 
-    const format = new WKT();
+    useEffect(() => {
+        if (map) {
+            const drawSource = new VectorSource({
+                wrapX: false,
+            });
+            drawSourceRef.current = drawSource;
+
+            const drawLayer = new VectorLayer({
+                source: drawSourceRef.current,
+            });
+
+            map.addLayer(drawLayer);
+        }
+
+        return () => {
+            if (map) {
+                const layers = map.getLayers().getArray();
+                const drawLayer = layers.find(
+                    (layer) =>
+                        layer instanceof VectorLayer &&
+                        layer.getSource() === drawSourceRef.current
+                );
+                if (drawLayer) {
+                    map.removeLayer(drawLayer);
+                }
+            }
+        };
+    }, [drawSourceRef, map]);
 
     useEffect(() => {
         if (map) {
-            const drawSource = drawSourceRef.current;
-
             const draw = new Draw({
-                source: drawSource,
+                source: drawSourceRef.current,
                 type: drawType,
                 freehand: isFreehand,
             });
@@ -42,7 +68,7 @@ export default function DrawComponent(props: Props) {
             draw.on("drawend", (event) => {
                 const feature = event.feature;
                 const geometry = feature.getGeometry()!;
-                const wkt = format.writeGeometry(geometry);
+                const wkt = new WKT().writeGeometry(geometry);
 
                 if (setNewFeatureWkt && newFeatureWkt) {
                     setNewFeatureWkt([...newFeatureWkt, wkt]);
@@ -59,13 +85,9 @@ export default function DrawComponent(props: Props) {
         drawSourceRef,
         drawType,
         isFreehand,
-        format,
         setNewFeatureWkt,
         newFeatureWkt,
     ]);
-
-    // Log the newFeatureWkt to console for debugging
-    useEffect(() => console.log(newFeatureWkt), [newFeatureWkt]);
 
     return null;
 }

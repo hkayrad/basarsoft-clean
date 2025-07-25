@@ -9,6 +9,7 @@ import {
     Eye,
     EyeClosed,
     Layers2,
+    ChevronRight,
 } from "lucide-react";
 import type VectorSource from "ol/source/Vector";
 import { useState } from "react";
@@ -59,7 +60,7 @@ export default function ControlComponent(props: Props) {
     const handleCancelDrawing = () => {
         if (map) setIsDrawMode(false);
         console.log("Drawing cancelled");
-        drawSourceRef?.current.clear();
+        drawSourceRef.current.clear();
         setNewFeatureWkt([]);
     };
 
@@ -93,7 +94,7 @@ export default function ControlComponent(props: Props) {
                 }}
             >
                 {isControlsVisible ? (
-                    <Layers2 size={16} />
+                    <ChevronRight size={20} />
                 ) : (
                     <Layers2 size={16} />
                 )}

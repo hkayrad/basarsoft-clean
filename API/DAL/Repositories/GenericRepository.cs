@@ -33,7 +33,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<List<T>> GetPagedAsync(int pageNumber, int pageSize)
     {
-        return await _dbSet.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        return await _dbSet.OrderBy(e => EF.Property<object>(e, "Id")).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
     }
 
     public async Task<T?> GetByIdAsync(int id)
