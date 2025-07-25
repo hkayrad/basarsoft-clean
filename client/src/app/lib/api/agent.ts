@@ -17,4 +17,13 @@ const saveFeature = async (feature: FeatureDto) => {
     }
 };
 
-export { agent, saveFeature };
+const deleteFeature = async (id: number) => {
+    try {
+        const response = await agent.delete(`/features/${id}`);
+        console.log("Feature deleted:", response.data);
+    } catch (error) {
+        console.error("Failed to delete feature:", error);
+    }
+}
+
+export { agent, saveFeature, deleteFeature };

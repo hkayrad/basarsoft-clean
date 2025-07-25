@@ -28,7 +28,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<List<T>> GetAllAsync()
     {
-        return await _dbSet.ToListAsync();
+        return await _dbSet.OrderBy(e => EF.Property<object>(e, "Id")).ToListAsync();
     }
 
     public async Task<List<T>> GetPagedAsync(int pageNumber, int pageSize)

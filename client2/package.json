@@ -1,10 +1,10 @@
 {
-  "name": "client",
+  "name": "client2",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3000",
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -15,7 +15,7 @@
     "ol": "^10.6.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router": "^7.7.0"
+    "react-router": "^7.7.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

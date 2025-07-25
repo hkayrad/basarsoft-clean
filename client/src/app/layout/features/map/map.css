@@ -1,18 +1,27 @@
-#map {
+body {
+    overflow-x: hidden;
+}
+
+#map-container {
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 74px); /* Adjust height to account for header */
     position: relative;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
 }
 
 .overlay {
     position: absolute;
     z-index: 2;
-    width: fit-content;
 }
 
 #tooltip {
     flex-direction: column;
-    width: 100px;
+    min-width: 150px;
+    width: auto;
     background-color: rgba(255, 255, 255, 0.8);
     padding: 5px;
     border-radius: 4px;
@@ -32,66 +41,82 @@
 #controls {
     position: absolute;
     top: 10px;
-    right: 10px;
+    right: 0px;
     z-index: 1000;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    background-color: #f1f1f1;
-    padding: 8px;
+    background-color: #343434;
+    padding: 16px;
+    border-radius: 8px 0 0 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #4a4a4a;
+    border-right: none;
+    width: 220px;
+    min-width: 220px;
 }
 
-/* MUI-style button base */
+#collapse-button {
+    background-color: #343434;
+    border: 1px solid #4a4a4a;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    width: fit-content;
+}
+
+#collapse-button:hover {
+    background-color: #4a4a4a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark theme button styling */
 #controls button {
     min-width: 64px;
-    padding: 6px 16px;
-    border-radius: 4px;
-    border: none;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1px solid #6a6a6a;
     font-weight: 500;
     font-size: 0.875rem;
     line-height: 1.75;
     letter-spacing: 0.02857em;
-    text-transform: uppercase;
     cursor: pointer;
-    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-        box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-        border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-        color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-        0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-    background-color: #1976d2;
-    color: #fff;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: #5a5a5a;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-/* MUI button hover effect */
+/* Dark theme button hover effect */
 #controls button:hover {
-    background-color: #1565c0;
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-        0px 4px 5px 0px rgba(0, 0, 0, 0.14),
-        0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+    background-color: #6a6a6a;
+    border-color: #7a7a7a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* MUI button active/pressed effect */
+/* Dark theme button active/pressed effect */
 #controls button:active {
-    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
-        0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-        0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    background-color: #4a4a4a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* MUI button focus effect */
+/* Dark theme button focus effect */
 #controls button:focus {
     outline: none;
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-        0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12),
-        0 0 0 3px rgba(25, 118, 210, 0.2);
+    border-color: #8a8a8a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
-/* MUI button disabled state */
+/* Dark theme button disabled state */
 #controls button:disabled {
-    color: rgba(0, 0, 0, 0.26);
+    color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.12);
     box-shadow: none;
-    background-color: rgba(0, 0, 0, 0.12);
     cursor: default;
 }
 
@@ -148,18 +173,122 @@
 #controls #draw-select {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
+    align-items: stretch;
+    gap: 12px;
+    border-top: 1px solid #6a6a6a;
+    padding-top: 16px;
 }
 
 #controls #draw-select div {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    flex-direction: row;
+    gap: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 4px;
+    border: 1px solid #6a6a6a;
 }
 
 #controls #draw-select label {
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    flex: 1;
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+#controls #draw-select label:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+#controls #draw-select label:has(input:checked) {
+    background-color: #5a5a5a;
+    border-color: #8a8a8a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Hide radio buttons completely and use label styling */
+#controls #draw-select input[type="radio"] {
+    display: none;
+}
+
+/* Freehand option styling */
+#controls #freehand-option {
+    display: flex;
+    align-items: center;
+}
+
+#controls #freehand-option label {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+#controls #freehand-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #5a5a5a;
+    cursor: pointer;
+    background-color: #343434;
+    border: 1px solid #6a6a6a;
+    border-radius: 3px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+#controls #freehand-option input[type="checkbox"]:checked {
+    background-color: #5a5a5a;
+    border-color: #8a8a8a;
+}
+
+#controls #freehand-option input[type="checkbox"]:checked::before {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#controls #freehand-option input[type="checkbox"]:hover {
+    border-color: #8a8a8a;
+    background-color: #4a4a4a;
+}
+
+/* Specific styling for undo button */
+#controls #undo {
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+#draw-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+#draw-buttons #draw {
+    width: 100%;
 }
 
 #saveDialog {
@@ -167,11 +296,98 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border: 1px solid #ccc;
+    background: #343434;
+    color: #ffffff;
+    padding: 24px;
+    border: 1px solid #4a4a4a;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
+    min-width: 320px;
+    backdrop-filter: blur(10px);
+}
+
+#saveDialog h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+    border-bottom: 1px solid #6a6a6a;
+    padding-bottom: 12px;
+}
+
+#saveDialog input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #6a6a6a;
+    border-radius: 8px;
+    background-color: #5a5a5a;
+    color: #ffffff;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+#saveDialog input[type="text"]:focus {
+    outline: none;
+    border-color: #8a8a8a;
+    background-color: #6a6a6a;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+#saveDialog input[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#saveDialog .button-group {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+#saveDialog .button-group button {
+    padding: 10px 20px;
+    border: 1px solid #6a6a6a;
+    border-radius: 8px;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 80px;
+    text-transform: none;
+    letter-spacing: normal;
+    line-height: normal;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#saveDialog .button-group button:first-child {
+    background-color: #5a5a5a;
+    color: #ffffff;
+}
+
+#saveDialog .button-group button:first-child:hover {
+    background-color: #6a6a6a;
+    border-color: #7a7a7a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+#saveDialog .button-group button:last-child {
+    background-color: transparent;
+    color: #ffffff;
+    border-color: #8a8a8a;
+}
+
+#saveDialog .button-group button:last-child:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
 }

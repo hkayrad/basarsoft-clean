@@ -5,6 +5,20 @@ import { OSM } from "ol/source";
 import { useContext, useEffect, useRef, useState } from "react";
 import Projection from "ol/proj/Projection";
 import FeaturesContext from "../../../lib/context/featureContext";
+import {
+    Eye,
+    EyeOff,
+    MapPin,
+    Minus,
+    Square,
+    Edit3,
+    Check,
+    Undo2,
+    Save,
+    X,
+    ChevronLeft,
+    ChevronRight,
+} from "lucide-react";
 
 import WKT from "ol/format/WKT";
 import VectorSource from "ol/source/Vector";
@@ -15,16 +29,17 @@ import { createStringXY } from "ol/coordinate";
 import { defaults as defaultControls } from "ol/control";
 import Draw from "ol/interaction/Draw";
 import type { Type } from "ol/geom/Geometry";
-import type Geometry from "ol/geom/Geometry";
+import Geometry from "ol/geom/Geometry";
 import { saveFeature } from "../../../lib/api/agent";
 
 export default function MapComponent() {
-    const { features } = useContext(FeaturesContext);
+    const { features, getFeatures } = useContext(FeaturesContext);
 
     const featuresLayerRef = useRef<VectorLayer | null>(null);
     const drawSourceRef = useRef<VectorSource | null>(null);
     const mapDivRef = useRef<HTMLDivElement | null>(null);
     const tooltipRef = useRef<HTMLDivElement | null>(null);
+    const undoButtonRef = useRef<HTMLButtonElement | null>(null);
 
     const [map, setMap] = useState<Map | null>(null);
     const [drawType, setDrawType] = useState<string>("Point");
@@ -34,6 +49,9 @@ export default function MapComponent() {
     const [isFeatureLayerOpen, setIsFeatureLayerOpen] = useState(true);
     const [isDrawMode, setIsDrawMode] = useState(false);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+    const [isTooltipVisible, setIsTooltipVisible] = useState(true);
+    const [isControlsCollapsed, setIsControlsCollapsed] = useState(false);
+    const [isFreehandMode, setIsFreehandMode] = useState(false);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const format = new WKT();
@@ -143,6 +161,7 @@ export default function MapComponent() {
             const featuresLayer = new VectorLayer({
                 source: featuresSource,
             });
+
             featuresLayerRef.current = featuresLayer;
 
             if (isFeatureLayerOpen) {
@@ -155,6 +174,7 @@ export default function MapComponent() {
         const draw = new Draw({
             source: drawSourceRef.current as VectorSource,
             type: drawType as Type,
+            freehand: isFreehandMode,
         });
 
         if (map) {
@@ -164,6 +184,10 @@ export default function MapComponent() {
                 map.removeInteraction(draw);
             }
         }
+
+        undoButtonRef.current?.addEventListener("click", () => {
+            draw.removeLastPoint();
+        });
 
         draw.on("drawend", (event) => {
             const feature = event.feature;
@@ -177,18 +201,25 @@ export default function MapComponent() {
                 map.removeInteraction(draw);
             }
         };
-    }, [map, isDrawMode, drawType, format]);
+    }, [map, isDrawMode, drawType, isFreehandMode, format]);
 
     const startDrawing = () => {
         setIsDrawMode(true);
+        setIsTooltipVisible(false);
     };
 
     const stopDrawing = () => {
         setIsDrawMode(false);
-        toggleSaveDialog();
+
+        if (newWkt.length > 0) {
+            setIsSaveDialogOpen(true);
+        }
     };
 
     const toggleFeatureLayer = () => setIsFeatureLayerOpen(!isFeatureLayerOpen);
+
+    const toggleControlsCollapse = () =>
+        setIsControlsCollapsed(!isControlsCollapsed);
 
     const toggleSaveDialog = () => setIsSaveDialogOpen(!isSaveDialogOpen);
 
@@ -217,14 +248,68 @@ export default function MapComponent() {
 
         setNewFeatureName("");
         setNewWkt([]);
+        drawSourceRef.current?.clear();
         toggleSaveDialog();
+        setIsTooltipVisible(true);
+        await getFeatures(); // Refresh features after saving
+    };
+
+    const handleCancelSaveFeature = () => {
+        setNewFeatureName("");
+        setNewWkt([]);
+        drawSourceRef.current?.clear();
+        toggleSaveDialog();
+        setIsTooltipVisible(true);
     };
 
     return (
-        <>
-            <div id="controls" className="overlay">
+        <div id="map-container">
+            <div
+                id="collapse-button"
+                className="overlay"
+                onClick={toggleControlsCollapse}
+                style={{
+                    top: "10px",
+                    right: isControlsCollapsed ? "10px" : "230px",
+                    transition: "right 0.3s ease",
+                    cursor: "pointer",
+                    backgroundColor: "#343434",
+                    padding: "8px",
+                    borderRadius: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    zIndex: 1001,
+                }}
+            >
+                {isControlsCollapsed ? (
+                    <ChevronLeft size={16} color="white" />
+                ) : (
+                    <ChevronRight size={16} color="white" />
+                )}
+            </div>
+            <div
+                id="controls"
+                className="overlay"
+                style={{
+                    transform: isControlsCollapsed
+                        ? "translateX(100%)"
+                        : "translateX(0)",
+                    transition: "transform 0.3s ease",
+                }}
+            >
                 <button onClick={toggleFeatureLayer}>
-                    {isFeatureLayerOpen ? "Hide" : "Show"} Features
+                    {isFeatureLayerOpen ? (
+                        <>
+                            <Eye size={16} /> Hide
+                        </>
+                    ) : (
+                        <>
+                            <EyeOff size={16} /> Show
+                        </>
+                    )}
                 </button>
                 <div id="draw-select">
                     <div>
@@ -236,7 +321,7 @@ export default function MapComponent() {
                                 checked={drawType === "Point"}
                                 onChange={handleDrawTypeChange}
                             />
-                            Point
+                            <MapPin size={16} />
                         </label>
                         <label>
                             <input
@@ -246,7 +331,7 @@ export default function MapComponent() {
                                 checked={drawType === "LineString"}
                                 onChange={handleDrawTypeChange}
                             />
-                            LineString
+                            <Minus size={16} />
                         </label>
                         <label>
                             <input
@@ -256,34 +341,80 @@ export default function MapComponent() {
                                 checked={drawType === "Polygon"}
                                 onChange={handleDrawTypeChange}
                             />
-                            Polygon
+                            <Square size={16} />
                         </label>
                     </div>
+                </div>
+                <div id="freehand-option">
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={isFreehandMode}
+                            onChange={(e) =>
+                                setIsFreehandMode(e.target.checked)
+                            }
+                        />
+                        Freehand
+                    </label>
+                </div>
+                <div id="draw-buttons">
                     <button
                         id="draw"
                         onClick={isDrawMode ? stopDrawing : startDrawing}
+                        style={{
+                            backgroundColor: isDrawMode
+                                ? "#83c54dff"
+                                : "#6a6a6a",
+                        }}
                     >
-                        {isDrawMode ? "Finish Drawing" : "Start Drawing"}
+                        {isDrawMode ? (
+                            <>
+                                <Check size={16} /> Finish
+                            </>
+                        ) : (
+                            <>
+                                <Edit3 size={16} /> Draw
+                            </>
+                        )}
+                    </button>
+                    <button
+                        id="undo"
+                        ref={undoButtonRef}
+                        style={{ display: isDrawMode ? "flex" : "none" }}
+                    >
+                        <Undo2 size={16} />
                     </button>
                 </div>
             </div>
             {isSaveDialogOpen && (
                 <div id="saveDialog" className="overlay">
+                    <h3>Save Feature</h3>
                     <input
                         type="text"
                         placeholder="Feature Name"
                         value={newFeatureName}
                         onChange={(e) => setNewFeatureName(e.target.value)}
                     />
-                    <button onClick={handleSaveFeature}>Save Feature</button>
-                    <button onClick={toggleSaveDialog}>Cancel</button>
+                    <div className="button-group">
+                        <button onClick={handleSaveFeature}>
+                            <Save size={16} /> Save
+                        </button>
+                        <button onClick={handleCancelSaveFeature}>
+                            <X size={16} /> Cancel
+                        </button>
+                    </div>
                 </div>
             )}
             <div id="mouse-pos" className="overlay"></div>
-            <div id="tooltip" ref={tooltipRef} className="overlay"></div>{" "}
             {/* NIYE GOZUKMUYO MK */}
+            <div
+                id="tooltip"
+                ref={tooltipRef}
+                className="overlay"
+                style={{ opacity: isTooltipVisible ? 1 : 0 }}
+            ></div>
             <div id="map-extent" className="overlay"></div>
             <div id="map" ref={mapDivRef}></div>
-        </>
+        </div>
     );
 }
