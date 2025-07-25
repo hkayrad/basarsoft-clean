@@ -15,6 +15,9 @@ import {
 import type VectorSource from "ol/source/Vector";
 import { useState } from "react";
 import type Draw from "ol/interaction/Draw";
+import type { WktFeature } from "../../../types";
+import { getAllFeatures } from "../../../lib/api/features/get";
+import { addFeature } from "../../../lib/api/features/post";
 
 type Props = {
     map: Map | null;
@@ -30,6 +33,7 @@ type Props = {
     isFeatureLayerVisible: boolean;
     setIsFeatureLayerVisible: (isVisible: boolean) => void;
     drawRef: React.RefObject<Draw>;
+    setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>;
 };
 
 export default function ControlComponent(props: Props) {
@@ -47,9 +51,13 @@ export default function ControlComponent(props: Props) {
         isFeatureLayerVisible,
         setIsFeatureLayerVisible,
         drawRef,
+        setWktFeatures,
     } = props;
 
-    const [isControlsVisible, setIsControlsVisible] = useState(true);
+    const [isControlsVisible, setIsControlsVisible] = useState(false);
+    const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+
+    const [featureName, setFeatureName] = useState("");
 
     const handleStartDrawing = () => {
         if (map) if (!isDrawMode) setIsDrawMode(true);
@@ -57,8 +65,7 @@ export default function ControlComponent(props: Props) {
 
     const handleSaveDrawing = () => {
         if (map) setIsDrawMode(false);
-        console.log("New Feature Saved: ", newFeatureWkt);
-        setNewFeatureWkt([]);
+        setIsSaveDialogOpen(true);
     };
 
     const handleCancelDrawing = () => {
@@ -86,12 +93,82 @@ export default function ControlComponent(props: Props) {
         drawRef.current?.removeLastPoint();
     };
 
+    const handleSaveFeature = async () => {
+        if (newFeatureWkt && newFeatureWkt.length > 0) {
+            const newFeatureWktString =
+                newFeatureWkt.length > 1
+                    ? `GEOMETRYCOLLECTION(${newFeatureWkt.join(",")})`
+                    : newFeatureWkt[0];
+
+            const featureData: WktFeature = {
+                name: featureName,
+                wkt: newFeatureWktString,
+            };
+
+            try {
+                addFeature(featureData).then(() => {
+                    getAllFeatures(setWktFeatures);
+                });
+            } catch (error) {
+                console.error("Error saving feature:", error);
+            }
+
+            setIsSaveDialogOpen(false);
+            setFeatureName("");
+            setNewFeatureWkt([]);
+
+            drawSourceRef.current.clear();
+        } else {
+            console.error("No feature data to save");
+        }
+    };
+
+    const handleCancelSave = () => {
+        setIsSaveDialogOpen(false);
+        setIsDrawMode(true);
+    };
+
     const toggleControlsVisibility = () => {
         setIsControlsVisible(!isControlsVisible);
     };
 
     return (
         <>
+            {isSaveDialogOpen && (
+                <div className="dialog-overlay">
+                    <div className="dialog">
+                        <div className="dialog-header">
+                            <h3>Save Feature</h3>
+                        </div>
+                        <div className="dialog-content">
+                            <label htmlFor="feature-name">Feature Name:</label>
+                            <input
+                                id="feature-name"
+                                type="text"
+                                value={featureName}
+                                onChange={(e) => setFeatureName(e.target.value)}
+                                placeholder="Enter feature name"
+                                autoFocus
+                            />
+                        </div>
+                        <div className="dialog-actions">
+                            <button
+                                className="dialog-button primary"
+                                onClick={handleSaveFeature}
+                                disabled={!featureName.trim()}
+                            >
+                                <Check size={16} /> Save
+                            </button>
+                            <button
+                                className="dialog-button secondary"
+                                onClick={handleCancelSave}
+                            >
+                                <X size={16} /> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div
                 id="collapse-button"
                 onClick={toggleControlsVisibility}
@@ -176,7 +253,13 @@ export default function ControlComponent(props: Props) {
                     </button>
                 ) : (
                     <div id="drawing-controls">
-                        <button id="save-draw" onClick={handleSaveDrawing}>
+                        <button
+                            id="save-draw"
+                            onClick={handleSaveDrawing}
+                            disabled={
+                                !newFeatureWkt || newFeatureWkt.length === 0
+                            }
+                        >
                             <Check size={16} />
                         </button>
                         <button id="undo-draw" onClick={handleUndoDrawing}>

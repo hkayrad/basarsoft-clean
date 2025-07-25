@@ -8,7 +8,7 @@ import { createStringXY } from "ol/coordinate";
 import MousePosition from "ol/control/MousePosition";
 import { defaults as defaultControls } from "ol/control";
 import type { WktFeature as WktFeature } from "../../../types";
-import loadFeatureData from "../../../lib/helpers/loadFeatureData";
+import { getAllFeatures } from "../../../lib/api/features/get";
 
 type Props = {
     mapRef: React.RefObject<HTMLDivElement>;
@@ -41,6 +41,8 @@ export default function MapComponent(props: Props) {
             center: MAP_CONFIG.center,
             zoom: MAP_CONFIG.zoom,
             projection: new Projection(MAP_CONFIG.projection),
+            extent: [-180, -90, 180, 90],
+            showFullExtent: true,
         });
 
         const tileLayer = new TileLayer({
@@ -54,7 +56,7 @@ export default function MapComponent(props: Props) {
             controls: defaultControls().extend([mousePosControl]),
         });
 
-        loadFeatureData(setWktFeatures);
+        getAllFeatures(setWktFeatures);
 
         setMap(map);
     }, [mapRef, setMap, setWktFeatures]);

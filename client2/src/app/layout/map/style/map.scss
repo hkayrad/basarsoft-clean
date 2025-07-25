@@ -20,7 +20,7 @@ $transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
 
 #map {
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 64px);
 }
 
 #mouse-position {
@@ -29,7 +29,7 @@ $transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
     width: fit-content;
     bottom: 10px;
     left: 10px;
-    width: 130px;
+    min-width: 130px;
     background-color: $color-dark-bg;
     color: $color-white;
     padding: $gap-medium;
@@ -40,7 +40,7 @@ $transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
 
 #collapse-button {
     position: absolute;
-    top: 10px;
+    top: 74px;
     right: 10px;
     z-index: 1000;
     width: 40px;
@@ -54,11 +54,122 @@ $transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
     justify-content: center;
     cursor: pointer;
     transition: all $transition-smooth;
+
+    &:hover {
+        background-color: $color-medium-bg;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.dialog {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+    max-width: 400px;
+    overflow: hidden;
+
+    &-header {
+        background-color: #343434;
+        color: #ffffff;
+        padding: 16px 20px;
+        border-bottom: 1px solid #ddd;
+
+        h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+    }
+
+    &-content {
+        padding: 20px;
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #343434;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+
+            &:focus {
+                outline: none;
+                border-color: #007bff;
+                box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            }
+        }
+    }
+
+    &-actions {
+        padding: 16px 20px;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        background-color: #f8f9fa;
+        border-top: 1px solid #ddd;
+    }
+
+    &-button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+
+        &.primary {
+            background-color: #007bff;
+            color: #ffffff;
+
+            &:hover:not(:disabled) {
+                background-color: #0056b3;
+            }
+
+            &:disabled {
+                background-color: #6c757d;
+                cursor: not-allowed;
+            }
+        }
+
+        &.secondary {
+            background-color: #6c757d;
+            color: #ffffff;
+
+            &:hover {
+                background-color: #545b62;
+            }
+        }
+    }
 }
 
 #controls {
     position: absolute;
-    top: 10px;
+    top: 74px;
     right: 0px;
     z-index: 1000;
     display: flex;
@@ -252,6 +363,11 @@ $transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
 
                 &:active {
                     background-color: darken($color-accent, 20%);
+                }
+
+                &:disabled {
+                    background-color: $color-dark-bg;
+                    cursor: not-allowed;
                 }
             }
 

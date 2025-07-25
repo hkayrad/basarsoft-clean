@@ -1,0 +1,101 @@
+// Theme variables
+$color-dark-bg: #343434;
+$color-light-bg: #f5f5f5;
+$color-dark-text: #ffffff;
+$color-light-text: #000000;
+$color-accent: #007bff;
+$color-accent-hover: #0056b3;
+
+// Assuming a theme toggle mechanism (dark or light)
+$header-bg: $color-dark-bg;
+$header-text: $color-dark-text;
+
+.header {
+    background-color: $header-bg;
+    color: $header-text;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    .logo {
+        display: flex;
+        align-items: center;
+
+        img {
+            width: auto;
+            height: 36px;
+            transition: transform 0.3s ease;
+            filter: invert(1);
+
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 12px;
+
+        .nav-link {
+            background-color: transparent;
+            color: $header-text;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                border-color: rgba(255, 255, 255, 0.3);
+                transform: translateY(-1px);
+            }
+
+            &.active {
+                background-color: $color-accent;
+                border-color: $color-accent;
+                color: #ffffff;
+                box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+
+                &:hover {
+                    background-color: $color-accent-hover;
+                    border-color: $color-accent-hover;
+                }
+            }
+
+            &:active {
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .header {
+        padding: 8px 16px;
+
+        img {
+            height: 40px;
+        }
+
+        .nav-links {
+            gap: 8px;
+
+            .nav-link {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+        }
+    }
+}

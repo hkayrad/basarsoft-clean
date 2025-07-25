@@ -54,6 +54,7 @@ export default function MapPage() {
                     isFeatureLayerVisible={isFeatureLayerVisible}
                     setIsFeatureLayerVisible={setIsFeatureLayerVisible}
                     drawRef={drawRef}
+                    setWktFeatures={setWktFeatures}
                 />
                 <DrawComponent
                     map={map}
