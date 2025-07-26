@@ -65,5 +65,12 @@ namespace API.Controllers
         {
             return await _featureService.DeleteFeatureAsync(id);
         }
+
+        [HttpGet("count")]
+        [MapToApiVersion("1.0")]
+        public async Task<Response<int>> GetFeatureCount()
+        {
+            return await _featureService.GetFeatureCountAsync();
+        }
     }
 }

@@ -114,6 +114,9 @@
     <data name="FeatureDeletedSuccessfully" xml:space="preserve">
         <value>Feature deleted successfully.</value>
     </data>
+    <data name="FeatureCountRetrievedSuccessfully" xml:space="preserve">
+        <value>Feature count retrieved successfully.</value>
+    </data>
     <!-- ___________ -->
 
     <!-- Database Messages-->

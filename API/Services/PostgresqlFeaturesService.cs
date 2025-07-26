@@ -64,7 +64,7 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
             await _unitOfWork.FeaturesRepository.AddRangeAsync(features);
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitTransactionAsync();
-            
+
             return Response<List<int>>.Success([.. features.Select(x => x.Id)], MessagesResourceHelper.GetString("FeaturesCreatedSuccessfully"));
         }
         catch (NpgsqlException ex)
@@ -196,6 +196,23 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
         catch (Exception ex)
         {
             return Response<bool>.UnhandledError(MessagesResourceHelper.GetString("UnexpectedError", ex.Message));
+        }
+    }
+
+    public async Task<Response<int>> GetFeatureCountAsync()
+    {
+        try
+        {
+            var count = await _unitOfWork.FeaturesRepository.GetCountAsync();
+            return Response<int>.Success(count, MessagesResourceHelper.GetString("FeatureCountRetrievedSuccessfully"));
+        }
+        catch (NpgsqlException ex)
+        {
+            return Response<int>.DbError(MessagesResourceHelper.GetString("DatabaseError", ex.Message));
+        }
+        catch (Exception ex)
+        {
+            return Response<int>.UnhandledError(MessagesResourceHelper.GetString("UnexpectedError", ex.Message));
         }
     }
 }
