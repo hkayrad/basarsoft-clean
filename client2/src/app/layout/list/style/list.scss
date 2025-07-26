@@ -1,0 +1,272 @@
+// Variables
+$primary-color: #3b82f6;
+$primary-hover: #2563eb;
+$success-color: #10b981;
+$success-hover: #059669;
+$danger-color: #ef4444;
+$danger-hover: #dc2626;
+$gray-50: #f9fafb;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #6b7280;
+$gray-700: #374151;
+$gray-900: #1f2937;
+$white: #ffffff;
+$border-radius: 4px;
+$border-radius-lg: 8px;
+$shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+$transition: all 0.2s;
+
+.list-container {
+    padding: 24px;
+    background-color: $white;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow;
+    margin: 20px;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid $gray-200;
+
+    h1 {
+        margin: 0;
+        color: $gray-900;
+        font-size: 24px;
+        font-weight: 600;
+    }
+}
+
+.list-controls {
+    label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: $gray-400;
+    }
+
+    select {
+        padding: 6px 12px;
+        border: 1px solid $gray-300;
+        border-radius: $border-radius;
+        background-color: $white;
+        font-size: 14px;
+    }
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 24px;
+}
+
+.features-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: $white;
+    table-layout: fixed; // Add this to maintain consistent column widths
+
+    th {
+        background-color: $gray-50;
+        color: $gray-700;
+        font-weight: 600;
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 2px solid $gray-200;
+        font-size: 14px;
+    }
+
+    td {
+        padding: 12px 16px;
+        border-bottom: 1px solid $gray-200;
+        font-size: 14px;
+        color: $gray-400;
+        overflow: hidden; // Add this to prevent content overflow
+        text-overflow: ellipsis; // Add this for better text handling
+        white-space: nowrap; // Add this to prevent text wrapping
+    }
+
+    tbody tr:hover {
+        background-color: $gray-50;
+    }
+
+    // Define specific column widths
+    th:nth-child(1), td:nth-child(1) { // ID column
+        width: 80px;
+    }
+
+    th:nth-child(2), td:nth-child(2) { // Name column
+        width: 300px;
+    }
+
+    th:nth-child(3), td:nth-child(3) { // Geometry column
+        width: max-content;
+    }
+
+    th:nth-child(4), td:nth-child(4) { // Actions column
+        width: 150px;
+    }
+}
+
+.geometry-cell {
+    font-family: monospace;
+    font-size: 12px;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: $border-radius;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: $transition;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &-view {
+        background-color: $primary-color;
+        color: $white;
+        border-color: $primary-color;
+
+        &:hover:not(:disabled) {
+            background-color: $primary-hover;
+        }
+    }
+
+    &-edit {
+        background-color: $success-color;
+        color: $white;
+        border-color: $success-color;
+
+        &:hover:not(:disabled) {
+            background-color: $success-hover;
+        }
+    }
+
+    &-delete {
+        background-color: $danger-color;
+        color: $white;
+        border-color: $danger-color;
+
+        &:hover:not(:disabled) {
+            background-color: $danger-hover;
+        }
+    }
+
+    &-pagination {
+        background-color: $white;
+        color: $gray-700;
+        border-color: $gray-300;
+
+        &:hover:not(:disabled) {
+            background-color: $gray-50;
+        }
+    }
+
+    &-page {
+        background-color: $white;
+        color: $gray-700;
+        border-color: $gray-300;
+        min-width: 36px;
+        justify-content: center;
+
+        &:hover:not(:disabled) {
+            background-color: $gray-50;
+        }
+
+        &.active {
+            background-color: $primary-color;
+            color: $white;
+            border-color: $primary-color;
+        }
+    }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: $gray-400;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid $gray-200;
+
+    &-info {
+        font-size: 14px;
+        color: $gray-400;
+    }
+
+    &-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+.page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ellipsis {
+    padding: 0 4px;
+    color: $gray-400;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .list-container {
+        margin: 10px;
+        padding: 16px;
+    }
+    
+    .list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .pagination {
+        flex-direction: column;
+        align-items: stretch;
+
+        &-controls {
+            justify-content: center;
+        }
+    }
+    
+    .features-table {
+        font-size: 12px;
+
+        th,
+        td {
+            padding: 8px 12px;
+        }
+    }
+}
