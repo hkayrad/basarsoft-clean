@@ -117,6 +117,12 @@
     <data name="FeatureCountRetrievedSuccessfully" xml:space="preserve">
         <value>Feature count retrieved successfully.</value>
     </data>
+    <data name="InvalidSortByProperty" xml:space="preserve">
+        <value>Invalid sort property. Use 'Id' or 'Name'.</value>
+    </data>
+    <data name="InvalidSortOrderProperty" xml:space="preserve">
+        <value>Invalid sort order property. Use 'ASC' or 'DESC'.</value>
+    </data>
     <!-- ___________ -->
 
     <!-- Database Messages-->

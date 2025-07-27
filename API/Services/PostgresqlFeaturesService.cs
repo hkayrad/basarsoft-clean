@@ -79,11 +79,30 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
         }
     }
 
-    public async Task<Response<List<Feature>>> GetAllFeaturesAsync(string? query = null)
+    public async Task<Response<List<Feature>>> GetAllFeaturesAsync(string? query = null, string? sortBy = null, string? sortOrder = null)
     {
+        if (string.IsNullOrWhiteSpace(sortBy))
+            sortBy = "Id";
+        else
+        {
+            var validSortByProperties = new[] { "Id", "Name" };
+            if (!validSortByProperties.Contains(sortBy, StringComparer.OrdinalIgnoreCase))
+                return Response<List<Feature>>.ValidationError(MessagesResourceHelper.GetString("InvalidSortByProperty"));
+        }
+
+        if (string.IsNullOrWhiteSpace(sortOrder))
+            sortOrder = "ASC";
+        else
+        {
+            var validSortOrderProperties = new[] { "ASC", "DESC" };
+            if (!validSortOrderProperties.Contains(sortOrder, StringComparer.OrdinalIgnoreCase))
+                return Response<List<Feature>>.ValidationError(MessagesResourceHelper.GetString("InvalidSortOrderProperty"));
+        }
+
+
         try
         {
-            var features = await _unitOfWork.FeaturesRepository.GetAllAsync(query);
+            var features = await _unitOfWork.FeaturesRepository.GetAllAsync(query, sortBy, sortOrder);
             return Response<List<Feature>>.Success([.. features], MessagesResourceHelper.GetString("FeaturesRetrievedSuccessfully"));
         }
         catch (NpgsqlException ex)
@@ -117,13 +136,32 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
         }
     }
 
-    public async Task<Response<List<Feature>>> GetPagedFeaturesAsync(int pageNumber, int pageSize, string? query = null)
+    public async Task<Response<List<Feature>>> GetPagedFeaturesAsync(int pageNumber, int pageSize, string? query = null, string? sortBy = "Id", string? sortOrder = "ASC")
     {
         if (pageNumber <= 0 || pageSize <= 0)
             return Response<List<Feature>>.ValidationError(MessagesResourceHelper.GetString("PageSizeAndPageNumberMustBeGreaterThanZero"));
+
+        if (string.IsNullOrWhiteSpace(sortBy))
+            sortBy = "Id";
+        else
+        {
+            var validSortByProperties = new[] { "Id", "Name" };
+            if (!validSortByProperties.Contains(sortBy, StringComparer.OrdinalIgnoreCase))
+                return Response<List<Feature>>.ValidationError(MessagesResourceHelper.GetString("InvalidSortByProperty"));
+        }
+
+        if (string.IsNullOrWhiteSpace(sortOrder))
+            sortOrder = "ASC";
+        else
+        {
+            var validSortOrderProperties = new[] { "ASC", "DESC" };
+            if (!validSortOrderProperties.Contains(sortOrder, StringComparer.OrdinalIgnoreCase))
+                return Response<List<Feature>>.ValidationError(MessagesResourceHelper.GetString("InvalidSortOrderProperty"));
+        }
+
         try
         {
-            var features = await _unitOfWork.FeaturesRepository.GetPagedAsync(pageNumber, pageSize, query);
+            var features = await _unitOfWork.FeaturesRepository.GetPagedAsync(pageNumber, pageSize, query, sortBy, sortOrder);
             return Response<List<Feature>>.Success([.. features], MessagesResourceHelper.GetString("FeaturesRetrievedSuccessfully"));
         }
         catch (NpgsqlException ex)
