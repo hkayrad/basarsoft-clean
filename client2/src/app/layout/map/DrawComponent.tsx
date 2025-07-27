@@ -4,6 +4,7 @@ import Draw from "ol/interaction/Draw";
 import VectorSource from "ol/source/Vector";
 import { WKT } from "ol/format";
 import VectorLayer from "ol/layer/Vector";
+import { Modify, Snap } from "ol/interaction";
 
 type Props = {
     map: Map | null;
@@ -69,6 +70,16 @@ export default function DrawComponent(props: Props) {
 
             if (isDrawMode) map.addInteraction(draw);
 
+            // Modify the drawing
+            const modifyInteraction = new Modify({
+                source: drawSourceRef.current,
+            });
+            const snapInteraction = new Snap({ source: drawSourceRef.current });
+
+            map.addInteraction(modifyInteraction);
+            map.addInteraction(snapInteraction);
+            // ---
+
             draw.on("drawend", (event) => {
                 const feature = event.feature;
                 const geometry = feature.getGeometry()!;
@@ -81,6 +92,8 @@ export default function DrawComponent(props: Props) {
 
             return () => {
                 map.removeInteraction(draw);
+                map.removeInteraction(modifyInteraction);
+                map.removeInteraction(snapInteraction);
             };
         }
     }, [
