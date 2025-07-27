@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Trash2, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import type { WktFeature } from "../../../types";
 import {
     getAllFeatures,
@@ -14,23 +14,21 @@ export default function ListPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalCount, setTotalCount] = useState(0);
+    const [searchQuery, setSearchQuery] = useState("");
 
-    const fetchTotalCount = async () => {
-        const count = await getFeatureCount();
+    const fetchTotalCount = useCallback(async () => {
+        const count = await getFeatureCount(searchQuery);
         setTotalCount(count);
-    };
+    }, [searchQuery]);
 
-    const loadPagedData = async () => {
-        await getAllFeatures(setFeatures, itemsPerPage, currentPage);
-    };
+    const loadPagedData = useCallback(async () => {
+        await getAllFeatures(setFeatures, itemsPerPage, currentPage, searchQuery);
+    }, [itemsPerPage, currentPage, searchQuery]);
 
     useEffect(() => {
         fetchTotalCount();
-    }, []);
-
-    useEffect(() => {
         loadPagedData();
-    }, [currentPage, itemsPerPage]);
+    }, [fetchTotalCount, loadPagedData]);
 
     const totalPages = Math.ceil(totalCount / itemsPerPage);
 
@@ -45,6 +43,11 @@ export default function ListPage() {
         setCurrentPage(1);
     };
 
+    const handleSearchChange = (value: string) => {
+        setSearchQuery(value);
+        setCurrentPage(1);
+    };
+
     const handleDeleteFeature = async (id: number) => {
         await deleteFeature(id);
         await loadPagedData();
@@ -56,6 +59,16 @@ export default function ListPage() {
             <div className="list-header">
                 <h1>Features</h1>
                 <div className="list-controls">
+                    <div className="search-container">
+                        <Search size={20} className="search-icon" />
+                        <input
+                            type="text"
+                            placeholder="Search features..."
+                            value={searchQuery}
+                            onChange={(e) => handleSearchChange(e.target.value)}
+                            className="search-input"
+                        />
+                    </div>
                     <label>
                         Items per page:
                         <select

@@ -1,12 +1,13 @@
 import type { WktFeature } from "../../../types";
 import agent from "../agent"
 
-const getAllFeatures = async (setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>, pageSize?: number, pageNumber?: number) => {
+const getAllFeatures = async (setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>, pageSize?: number, pageNumber?: number, query?: string) => {
     try {
         const response = await agent.get("/features", {
             params: {
                 pageSize,
                 pageNumber,
+                query
             },
         });
         setWktFeatures(response.data.data);
@@ -16,9 +17,13 @@ const getAllFeatures = async (setWktFeatures: React.Dispatch<React.SetStateActio
     }
 }
 
-const getFeatureCount = async () => {
+const getFeatureCount = async (query?: string) => {
     try {
-        const response = await agent.get("/features/count");
+        const response = await agent.get("/features/count", {
+            params: {
+                query
+            },
+        });
         return response.data.data;
     } catch (error) {
         console.error("Error fetching feature count:", error);
