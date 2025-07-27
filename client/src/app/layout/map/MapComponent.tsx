@@ -47,7 +47,6 @@ export default function MapComponent(props: Props) {
 
         const tileLayer = new TileLayer({
             source: new OSM(),
-            
         });
 
         const map = new Map({
