@@ -319,4 +319,46 @@
 }
 #controls #drawing-controls button#cancel-draw:active {
   background-color: rgb(168.2876712329, 34.5205479452, 20.7123287671);
+}
+
+.ol-tooltip {
+  position: absolute;
+  background: #343434;
+  color: #ffffff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid #6a6a6a;
+  pointer-events: none;
+  z-index: 1100;
+  max-width: 250px;
+  min-width: 120px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+}
+.ol-tooltip p {
+  margin: 0;
+  padding: 0;
+}
+.ol-tooltip p strong {
+  font-weight: 600;
+  color: #ffffff;
+}
+.ol-tooltip br {
+  line-height: 1;
+}
+@media (max-width: 768px) {
+  .ol-tooltip {
+    font-size: 0.75rem;
+    padding: 8px 12px;
+    max-width: 200px;
+  }
+}
+.ol-tooltip.show {
+  display: flex;
+  animation: fadeIn 0.2s ease;
 }/*# sourceMappingURL=map.css.map */

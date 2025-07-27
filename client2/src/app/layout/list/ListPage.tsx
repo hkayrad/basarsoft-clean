@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Edit, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import type { WktFeature } from "../../../types";
 import {
     getAllFeatures,
-    getFeautureCount,
+    getFeatureCount,
 } from "../../../lib/api/features/get";
 
 import "./style/list.css";
@@ -16,7 +16,7 @@ export default function ListPage() {
     const [totalCount, setTotalCount] = useState(0);
 
     const fetchTotalCount = async () => {
-        const count = await getFeautureCount();
+        const count = await getFeatureCount();
         setTotalCount(count);
     };
 
@@ -91,12 +91,12 @@ export default function ListPage() {
                                 <td className="geometry-cell">{feature.wkt}</td>
                                 <td>
                                     <div className="action-buttons">
-                                        <button
+                                        {/* <button
                                             className="btn btn-edit"
                                             title="Edit"
                                         >
                                             <Edit size={16} />
-                                        </button>
+                                        </button> */}
                                         <button
                                             className="btn btn-delete"
                                             title="Delete"

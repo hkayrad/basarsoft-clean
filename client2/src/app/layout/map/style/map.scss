@@ -386,3 +386,50 @@ $transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
         }
     }
 }
+
+.ol-tooltip {
+  position: absolute;
+  background: $color-dark-bg;
+  color: $color-white;
+  padding: $gap-large $gap-xl;
+  border-radius: $border-radius-small;
+  font-size: 0.8125rem; // 13px
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid $color-light-border;
+  pointer-events: none;
+  z-index: 1100;
+  max-width: 250px;
+  min-width: 120px;
+  display: none;
+  flex-direction: column;
+  gap: $gap-small;
+
+  p {
+    margin: 0;
+    padding: 0;
+    
+    strong {
+      font-weight: 600;
+      color: $color-white;
+    }
+  }
+
+  br {
+    line-height: 1;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    font-size: 0.75rem; // 12px
+    padding: $gap-medium $gap-large;
+    max-width: 200px;
+  }
+
+  // Animation for smooth appearance
+  &.show {
+    display: flex;
+    animation: fadeIn $transition-fast;
+  }
+}

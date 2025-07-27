@@ -15,9 +15,9 @@ import {
 import type VectorSource from "ol/source/Vector";
 import { useState } from "react";
 import type Draw from "ol/interaction/Draw";
-import type { WktFeature } from "../../../types";
-import { getAllFeatures } from "../../../lib/api/features/get";
-import { addFeature } from "../../../lib/api/features/post";
+import type { WktFeature } from "../../../../types";
+import { getAllFeatures } from "../../../../lib/api/features/get";
+import { addFeature } from "../../../../lib/api/features/post";
 
 type Props = {
     map: Map | null;
@@ -27,8 +27,8 @@ type Props = {
     setDrawType: (drawType: "Point" | "LineString" | "Polygon") => void;
     isFreehand: boolean;
     setIsFreehand: (isFreehand: boolean) => void;
-    newFeatureWkt?: string[];
-    setNewFeatureWkt: (wkt: string[]) => void;
+    newFeatures?: WktFeature[];
+    setNewFeatures: (newFeature: WktFeature[]) => void;
     drawSourceRef: React.RefObject<VectorSource>;
     isFeatureLayerVisible: boolean;
     setIsFeatureLayerVisible: (isVisible: boolean) => void;
@@ -36,7 +36,7 @@ type Props = {
     setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>;
 };
 
-export default function ControlComponent(props: Props) {
+export default function ControlLayer(props: Props) {
     const {
         map,
         isDrawMode,
@@ -45,8 +45,8 @@ export default function ControlComponent(props: Props) {
         setDrawType,
         isFreehand,
         setIsFreehand,
-        newFeatureWkt,
-        setNewFeatureWkt,
+        newFeatures,
+        setNewFeatures,
         drawSourceRef,
         isFeatureLayerVisible,
         setIsFeatureLayerVisible,
@@ -54,7 +54,7 @@ export default function ControlComponent(props: Props) {
         setWktFeatures,
     } = props;
 
-    const [isControlsVisible, setIsControlsVisible] = useState(false);
+    const [isControlsVisible, setIsControlsVisible] = useState(true);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
 
     const [featureName, setFeatureName] = useState("");
@@ -72,7 +72,7 @@ export default function ControlComponent(props: Props) {
         if (map) setIsDrawMode(false);
         console.log("Drawing cancelled");
         drawSourceRef.current.clear();
-        setNewFeatureWkt([]);
+        setNewFeatures([]);
     };
 
     const handleDrawTypeChange = (
@@ -94,11 +94,13 @@ export default function ControlComponent(props: Props) {
     };
 
     const handleSaveFeature = async () => {
-        if (newFeatureWkt && newFeatureWkt.length > 0) {
+        if (newFeatures && newFeatures.length > 0) {
             const newFeatureWktString =
-                newFeatureWkt.length > 1
-                    ? `GEOMETRYCOLLECTION(${newFeatureWkt.join(",")})`
-                    : newFeatureWkt[0];
+                newFeatures.length > 1
+                    ? `GEOMETRYCOLLECTION(${newFeatures
+                          .map((f) => f.wkt)
+                          .join(",")})`
+                    : newFeatures[0].wkt;
 
             const featureData: WktFeature = {
                 name: featureName,
@@ -115,7 +117,7 @@ export default function ControlComponent(props: Props) {
 
             setIsSaveDialogOpen(false);
             setFeatureName("");
-            setNewFeatureWkt([]);
+            setNewFeatures([]);
 
             drawSourceRef.current.clear();
         } else {
@@ -256,9 +258,7 @@ export default function ControlComponent(props: Props) {
                         <button
                             id="save-draw"
                             onClick={handleSaveDrawing}
-                            disabled={
-                                !newFeatureWkt || newFeatureWkt.length === 0
-                            }
+                            disabled={!newFeatures || newFeatures.length === 0}
                         >
                             <Check size={16} />
                         </button>

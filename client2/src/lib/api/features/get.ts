@@ -16,7 +16,7 @@ const getAllFeatures = async (setWktFeatures: React.Dispatch<React.SetStateActio
     }
 }
 
-const getFeautureCount = async () => {
+const getFeatureCount = async () => {
     try {
         const response = await agent.get("/features/count");
         return response.data.data;
@@ -26,7 +26,18 @@ const getFeautureCount = async () => {
     }
 }
 
+const getFeatureById = async (id: number) => {
+    try {
+        const response = await agent.get(`/features/${id}`);
+        return response.data.data;
+    } catch (error) {
+        console.error("Error fetching feature by ID:", error);
+        throw error;
+    }
+}
+
 export {
     getAllFeatures,
-    getFeautureCount
+    getFeatureCount,
+    getFeatureById
 }

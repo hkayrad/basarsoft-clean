@@ -47,6 +47,7 @@ export default function MapComponent(props: Props) {
 
         const tileLayer = new TileLayer({
             source: new OSM(),
+            
         });
 
         const map = new Map({
@@ -54,6 +55,7 @@ export default function MapComponent(props: Props) {
             view: view,
             layers: [tileLayer],
             controls: defaultControls().extend([mousePosControl]),
+            
         });
 
         getAllFeatures(setWktFeatures);

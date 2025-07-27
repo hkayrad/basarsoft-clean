@@ -1,5 +1,5 @@
 export type WktFeature = {
     id?: number;
-    name: string;
+    name?: string;
     wkt: string;
 }
