@@ -26,14 +26,31 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return [.. entities.Select(e => (int)(typeof(T).GetProperty("Id")?.GetValue(e) ?? 0))]; // Assuming T has an Id property
     }
 
-    public async Task<List<T>> GetAllAsync()
+    public async Task<List<T>> GetAllAsync(string? query)
     {
-        return await _dbSet.OrderBy(e => EF.Property<object>(e, "Id")).ToListAsync();
+        var queryable = _dbSet.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            queryable = queryable.Where(e => EF.Property<string>(e, "Name").ToLower().Contains(query.ToLower()));
+        }
+
+        return await queryable.ToListAsync();
     }
 
-    public async Task<List<T>> GetPagedAsync(int pageNumber, int pageSize)
+    public async Task<List<T>> GetPagedAsync(int pageNumber, int pageSize, string? query)
     {
-        return await _dbSet.OrderBy(e => EF.Property<object>(e, "Id")).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        var queryable = _dbSet.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            queryable = queryable.Where(e => EF.Property<string>(e, "Name").ToLower().Contains(query.ToLower()));
+        }
+
+        return await queryable.OrderBy(e => EF.Property<object>(e, "Id"))
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
     }
 
     public async Task<T?> GetByIdAsync(int id)

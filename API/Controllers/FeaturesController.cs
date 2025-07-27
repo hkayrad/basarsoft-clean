@@ -32,7 +32,7 @@ namespace API.Controllers
 
         [HttpGet]
         [MapToApiVersion("1.0")]
-        public async Task<Response<List<Feature>>> GetFeatures([FromQuery(Name = "pageSize")] int? pageSize, [FromQuery(Name = "pageNumber")] int? pageNumber)
+        public async Task<Response<List<Feature>>> GetFeatures([FromQuery(Name = "pageSize")] int? pageSize, [FromQuery(Name = "pageNumber")] int? pageNumber, [FromQuery(Name = "query")] string? query)
         {
             if (pageSize.HasValue ^ pageNumber.HasValue)
                 return Response<List<Feature>>.ValidationError(MessagesResourceHelper.GetString("PageSizeAndPageNumberMustBeProvidedTogether"));
@@ -40,9 +40,9 @@ namespace API.Controllers
             bool isPaginated = pageSize.HasValue && pageNumber.HasValue;
 
             if (isPaginated)
-                return await _featureService.GetPagedFeaturesAsync(pageNumber!.Value, pageSize!.Value);
+                return await _featureService.GetPagedFeaturesAsync(pageNumber!.Value, pageSize!.Value, query);
             else
-                return await _featureService.GetAllFeaturesAsync();
+                return await _featureService.GetAllFeaturesAsync(query);
         }
 
         [HttpGet("{id}")]

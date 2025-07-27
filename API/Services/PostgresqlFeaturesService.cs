@@ -79,11 +79,11 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
         }
     }
 
-    public async Task<Response<List<Feature>>> GetAllFeaturesAsync()
+    public async Task<Response<List<Feature>>> GetAllFeaturesAsync(string? query)
     {
         try
         {
-            var features = await _unitOfWork.FeaturesRepository.GetAllAsync();
+            var features = await _unitOfWork.FeaturesRepository.GetAllAsync(query);
             return Response<List<Feature>>.Success([.. features], MessagesResourceHelper.GetString("FeaturesRetrievedSuccessfully"));
         }
         catch (NpgsqlException ex)
@@ -117,13 +117,13 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
         }
     }
 
-    public async Task<Response<List<Feature>>> GetPagedFeaturesAsync(int pageNumber, int pageSize)
+    public async Task<Response<List<Feature>>> GetPagedFeaturesAsync(int pageNumber, int pageSize, string? query)
     {
         if (pageNumber <= 0 || pageSize <= 0)
             return Response<List<Feature>>.ValidationError(MessagesResourceHelper.GetString("PageSizeAndPageNumberMustBeGreaterThanZero"));
         try
         {
-            var features = await _unitOfWork.FeaturesRepository.GetPagedAsync(pageNumber, pageSize);
+            var features = await _unitOfWork.FeaturesRepository.GetPagedAsync(pageNumber, pageSize, query);
             return Response<List<Feature>>.Success([.. features], MessagesResourceHelper.GetString("FeaturesRetrievedSuccessfully"));
         }
         catch (NpgsqlException ex)
