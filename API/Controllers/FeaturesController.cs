@@ -68,9 +68,9 @@ namespace API.Controllers
 
         [HttpGet("count")]
         [MapToApiVersion("1.0")]
-        public async Task<Response<int>> GetFeatureCount()
+        public async Task<Response<int>> GetFeatureCount([FromQuery(Name = "query")] string? query)
         {
-            return await _featureService.GetFeatureCountAsync();
+            return await _featureService.GetFeatureCountAsync(query);
         }
     }
 }

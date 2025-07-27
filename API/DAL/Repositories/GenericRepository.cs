@@ -26,7 +26,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return [.. entities.Select(e => (int)(typeof(T).GetProperty("Id")?.GetValue(e) ?? 0))]; // Assuming T has an Id property
     }
 
-    public async Task<List<T>> GetAllAsync(string? query)
+    public async Task<List<T>> GetAllAsync(string? query = null)
     {
         var queryable = _dbSet.AsQueryable();
 
@@ -38,7 +38,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await queryable.ToListAsync();
     }
 
-    public async Task<List<T>> GetPagedAsync(int pageNumber, int pageSize, string? query)
+    public async Task<List<T>> GetPagedAsync(int pageNumber, int pageSize, string? query = null)
     {
         var queryable = _dbSet.AsQueryable();
 
@@ -79,9 +79,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return false;
     }
 
-    public async Task<int> GetCountAsync()
+    public async Task<int> GetCountAsync(string? query = null)
     {
-        return await _dbSet.CountAsync();
+        var queryable = _dbSet.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            queryable = queryable.Where(e => EF.Property<string>(e, "Name").ToLower().Contains(query.ToLower()));
+        }
+
+        return await queryable.CountAsync();
     }
 
 }

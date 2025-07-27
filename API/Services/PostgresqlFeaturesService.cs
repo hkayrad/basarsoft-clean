@@ -79,7 +79,7 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
         }
     }
 
-    public async Task<Response<List<Feature>>> GetAllFeaturesAsync(string? query)
+    public async Task<Response<List<Feature>>> GetAllFeaturesAsync(string? query = null)
     {
         try
         {
@@ -117,7 +117,7 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
         }
     }
 
-    public async Task<Response<List<Feature>>> GetPagedFeaturesAsync(int pageNumber, int pageSize, string? query)
+    public async Task<Response<List<Feature>>> GetPagedFeaturesAsync(int pageNumber, int pageSize, string? query = null)
     {
         if (pageNumber <= 0 || pageSize <= 0)
             return Response<List<Feature>>.ValidationError(MessagesResourceHelper.GetString("PageSizeAndPageNumberMustBeGreaterThanZero"));
@@ -199,11 +199,11 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
         }
     }
 
-    public async Task<Response<int>> GetFeatureCountAsync()
+    public async Task<Response<int>> GetFeatureCountAsync(string? query = null)
     {
         try
         {
-            var count = await _unitOfWork.FeaturesRepository.GetCountAsync();
+            var count = await _unitOfWork.FeaturesRepository.GetCountAsync(query);
             return Response<int>.Success(count, MessagesResourceHelper.GetString("FeatureCountRetrievedSuccessfully"));
         }
         catch (NpgsqlException ex)
