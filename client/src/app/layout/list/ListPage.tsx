@@ -1,10 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { Trash2, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { Trash2, ChevronLeft, ChevronRight, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { WktFeature } from "../../../types";
-import {
-    getAllFeatures,
-    getFeatureCount,
-} from "../../../lib/api/features/get";
+import { getAllFeatures, getFeatureCount } from "../../../lib/api/features/get";
 
 import "./style/list.css";
 import { deleteFeature } from "../../../lib/api/features/delete";
@@ -15,6 +12,8 @@ export default function ListPage() {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalCount, setTotalCount] = useState(0);
     const [searchQuery, setSearchQuery] = useState("");
+    const [sortBy, setSortBy] = useState("Id");
+    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
     const fetchTotalCount = useCallback(async () => {
         const count = await getFeatureCount(searchQuery);
@@ -22,8 +21,15 @@ export default function ListPage() {
     }, [searchQuery]);
 
     const loadPagedData = useCallback(async () => {
-        await getAllFeatures(setFeatures, itemsPerPage, currentPage, searchQuery);
-    }, [itemsPerPage, currentPage, searchQuery]);
+        await getAllFeatures(
+            setFeatures,
+            itemsPerPage,
+            currentPage,
+            searchQuery,
+            sortBy,
+            sortOrder
+        );
+    }, [itemsPerPage, currentPage, searchQuery, sortBy, sortOrder]);
 
     useEffect(() => {
         fetchTotalCount();
@@ -48,6 +54,21 @@ export default function ListPage() {
         setCurrentPage(1);
     };
 
+    const handleSortChange = (field: string) => {
+        if (sortBy === field) {
+            setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+        } else {
+            setSortBy(field);
+            setSortOrder("asc");
+        }
+        setCurrentPage(1);
+    };
+
+    const getSortIcon = (field: string) => {
+        if (sortBy !== field) return <ArrowUpDown size={14} />;
+        return sortOrder === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />;
+    };
+
     const handleDeleteFeature = async (id: number) => {
         await deleteFeature(id);
         await loadPagedData();
@@ -68,6 +89,32 @@ export default function ListPage() {
                             onChange={(e) => handleSearchChange(e.target.value)}
                             className="search-input"
                         />
+                    </div>
+                    <div className="sort-container">
+                        <label>
+                            Sort by:
+                            <select
+                                value={sortBy}
+                                onChange={(e) => {
+                                    setSortBy(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                                className="sort-select"
+                            >
+                                <option value="Id">ID</option>
+                                <option value="Name">Name</option>
+                            </select>
+                        </label>
+                        <button
+                            className={`btn btn-sort ${sortOrder}`}
+                            onClick={() => {
+                                setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+                                setCurrentPage(1);
+                            }}
+                            title={`Sort ${sortOrder === "asc" ? "Descending" : "Ascending"}`}
+                        >
+                            {sortOrder === "asc" ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
+                        </button>
                     </div>
                     <label>
                         Items per page:
@@ -90,8 +137,22 @@ export default function ListPage() {
                 <table className="features-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
+                            <th>
+                                <button
+                                    className="sort-header"
+                                    onClick={() => handleSortChange("Id")}
+                                >
+                                    ID {getSortIcon("Id")}
+                                </button>
+                            </th>
+                            <th>
+                                <button
+                                    className="sort-header"
+                                    onClick={() => handleSortChange("Name")}
+                                >
+                                    Name {getSortIcon("Name")}
+                                </button>
+                            </th>
                             <th>WKT</th>
                             <th>Actions</th>
                         </tr>

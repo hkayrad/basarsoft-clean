@@ -1,13 +1,15 @@
 import type { WktFeature } from "../../../types";
 import agent from "../agent"
 
-const getAllFeatures = async (setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>, pageSize?: number, pageNumber?: number, query?: string) => {
+const getAllFeatures = async (setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>, pageSize?: number, pageNumber?: number, query?: string, sortBy?: string, sortOrder?: string) => {
     try {
         const response = await agent.get("/features", {
             params: {
                 pageSize,
                 pageNumber,
-                query
+                query,
+                sortBy,
+                sortOrder
             },
         });
         setWktFeatures(response.data.data);
