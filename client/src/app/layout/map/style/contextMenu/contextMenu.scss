@@ -1,0 +1,81 @@
+// SCSS Variables
+$color-dark-bg: #343434;
+$color-dark-border: #4a4a4a;
+$color-medium-bg: #5a5a5a;
+$color-light-border: #6a6a6a;
+$color-lighter-border: #7a7a7a;
+$color-lightest-border: #8a8a8a;
+$color-accent: #83c54d;
+$color-danger: #ff6b6b;
+$color-white: #ffffff;
+$border-radius: 8px;
+$border-radius-small: 6px;
+$border-radius-round: 16px;
+$gap-small: 4px;
+$gap-medium: 8px;
+$gap-large: 12px;
+$gap-xl: 16px;
+$transition-fast: 0.2s ease;
+$transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
+
+.context-menu {
+    position: fixed;
+    z-index: 1200;
+    display: none;
+    flex-direction: column;
+    background-color: $color-dark-bg;
+    border: 1px solid $color-dark-border;
+    border-radius: $border-radius;
+    padding: $gap-small;
+    min-width: 150px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    gap: $gap-small;
+
+    &.show {
+        display: flex;
+    }
+
+    .context-button {
+        background: none;
+        border: none;
+        color: $color-white;
+        padding: $gap-medium $gap-xl;
+        text-align: left;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color $transition-fast;
+        display: flex;
+        align-items: center;
+        gap: $gap-medium;
+        border-radius: $border-radius-small;
+
+        &:hover {
+            background-color: $color-medium-bg;
+        }
+
+        &:active {
+            background-color: $color-light-border;
+        }
+
+        &:disabled {
+            color: #888;
+            cursor: not-allowed;
+
+            &:hover {
+                background: none;
+            }
+        }
+
+        &.danger {
+            color: $color-danger;
+
+            &:hover {
+                background-color: rgba($color-danger, 0.1);
+            }
+
+            &:active {
+                background-color: rgba($color-danger, 0.2);
+            }
+        }
+    }
+}

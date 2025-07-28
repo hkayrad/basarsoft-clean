@@ -1,4 +1,3 @@
-import "./style/map.css";
 import "ol/ol.css";
 
 import MapComponent from "./MapComponent";
@@ -17,6 +16,7 @@ import TooltipLayer from "./layers/TooltipLayer";
 import SelectLayer from "./layers/SelectLayer";
 import EditLayer from "./layers/EditLayer";
 import TranslateLayer from "./layers/TranslateLayer";
+import ContextMenuLayer from "./layers/ContextMenuLayer";
 
 export default function MapPage() {
     const mapRef = useRef<HTMLDivElement>(null!);
@@ -37,6 +37,7 @@ export default function MapPage() {
     const [isDrawMode, setIsDrawMode] = useState(false);
     const [isFreehand, setIsFreehand] = useState(false);
     const [isFeatureLayerVisible, setIsFeatureLayerVisible] = useState(true);
+    const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
 
     return (
         <>
@@ -47,6 +48,15 @@ export default function MapPage() {
                 setMap={setMap}
                 setWktFeatures={setWktFeatures}
             >
+                <ContextMenuLayer
+                    map={map}
+                    mapRef={mapRef}
+                    selectedFeatures={selectedFeatures}
+                    isContextMenuOpen={isContextMenuOpen}
+                    setIsContextMenuOpen={setIsContextMenuOpen}
+                    setWktFeatures={setWktFeatures}
+                    setSelectedFeatures={setSelectedFeatures}
+                />
                 <DataLayer
                     map={map}
                     wktFeatures={wktFeatures}
@@ -94,6 +104,7 @@ export default function MapPage() {
                 </DrawLayer>
                 <TooltipLayer
                     map={map}
+                    isContextMenuOpen={isContextMenuOpen}
                     dataLayerRef={dataLayerRef}
                     isDrawMode={isDrawMode}
                     selectedFeatures={selectedFeatures}
@@ -103,14 +114,18 @@ export default function MapPage() {
                     isDrawMode={isDrawMode}
                     setSelectedFeatures={setSelectedFeatures}
                 />
-                {editType === "Edit" ? (
-                    <EditLayer map={map} selectedFeatures={selectedFeatures} />
-                ) : (
-                    <TranslateLayer
-                        map={map}
-                        selectedFeatures={selectedFeatures}
-                    />
-                )}
+                {!isContextMenuOpen &&
+                    (editType === "Edit" ? (
+                        <EditLayer
+                            map={map}
+                            selectedFeatures={selectedFeatures}
+                        />
+                    ) : (
+                        <TranslateLayer
+                            map={map}
+                            selectedFeatures={selectedFeatures}
+                        />
+                    ))}
             </MapComponent>
         </>
     );

@@ -1,0 +1,86 @@
+// SCSS Variables
+$color-dark-bg: #343434;
+$color-dark-border: #4a4a4a;
+$color-medium-bg: #5a5a5a;
+$color-light-border: #6a6a6a;
+$color-lighter-border: #7a7a7a;
+$color-lightest-border: #8a8a8a;
+$color-accent: #83c54d;
+$color-danger: #e74c3c;
+$color-white: #ffffff;
+$border-radius: 8px;
+$border-radius-small: 6px;
+$border-radius-round: 16px;
+$gap-small: 4px;
+$gap-medium: 8px;
+$gap-large: 12px;
+$gap-xl: 16px;
+$transition-fast: 0.2s ease;
+$transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
+
+#map {
+    width: 100vw;
+    height: calc(100vh - 64px);
+}
+
+#mouse-position {
+    position: absolute;
+    z-index: 1000;
+    width: fit-content;
+    bottom: 10px;
+    left: 10px;
+    min-width: 130px;
+    background-color: $color-dark-bg;
+    color: $color-white;
+    padding: $gap-medium;
+    border-radius: $border-radius;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 0.875rem;
+}
+
+.ol-tooltip {
+  position: absolute;
+  background: $color-dark-bg;
+  color: $color-white;
+  padding: $gap-large $gap-xl;
+  border-radius: $border-radius-small;
+  font-size: 0.8125rem; // 13px
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid $color-light-border;
+  pointer-events: none;
+  z-index: 1100;
+  max-width: 250px;
+  min-width: 120px;
+  display: none;
+  flex-direction: column;
+  gap: $gap-small;
+
+  p {
+    margin: 0;
+    padding: 0;
+    
+    strong {
+      font-weight: 600;
+      color: $color-white;
+    }
+  }
+
+  br {
+    line-height: 1;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    font-size: 0.75rem; // 12px
+    padding: $gap-medium $gap-large;
+    max-width: 200px;
+  }
+
+  // Animation for smooth appearance
+  &.show {
+    display: flex;
+    animation: fadeIn $transition-fast;
+  }
+}

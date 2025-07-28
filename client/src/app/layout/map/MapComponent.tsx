@@ -1,3 +1,5 @@
+import "./style/map/map.css"
+
 import { useEffect, useState } from "react";
 import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
@@ -6,11 +8,13 @@ import type { Units } from "ol/proj/Units";
 import { Projection } from "ol/proj";
 import { createStringXY } from "ol/coordinate";
 import MousePosition from "ol/control/MousePosition";
-import { defaults as defaultControls } from "ol/control";
+import { defaults as defaultControls, ZoomSlider } from "ol/control";
 import type { WktFeature as WktFeature } from "../../../types";
 import { getAllFeatures, getFeatureById } from "../../../lib/api/features/get";
 import { useSearchParams } from "react-router";
 import { WKT } from "ol/format";
+
+
 
 type Props = {
     map: Map | null;
@@ -58,6 +62,8 @@ export default function MapComponent(props: Props) {
             target: mousePositionElement,
         });
 
+        const zoomSlider = new ZoomSlider();
+
         const view = new View({
             center: MAP_CONFIG.center,
             zoom: MAP_CONFIG.zoom,
@@ -74,7 +80,7 @@ export default function MapComponent(props: Props) {
             target: mapRef.current,
             view: view,
             layers: [tileLayer],
-            controls: defaultControls().extend([mousePosControl]),
+            controls: defaultControls().extend([mousePosControl, zoomSlider]),
         });
 
         getAllFeatures(setWktFeatures);

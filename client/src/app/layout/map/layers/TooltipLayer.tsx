@@ -7,11 +7,18 @@ type Props = {
     map: Map | null;
     dataLayerRef: React.RefObject<VectorLayer>;
     isDrawMode: boolean;
+    isContextMenuOpen: boolean;
     selectedFeatures: Feature[];
 };
 
 export default function TooltipLayer(props: Props) {
-    const { map, dataLayerRef, isDrawMode, selectedFeatures } = props;
+    const {
+        map,
+        dataLayerRef,
+        isDrawMode,
+        isContextMenuOpen,
+        selectedFeatures,
+    } = props;
 
     useEffect(() => {
         if (!map) return;
@@ -25,7 +32,11 @@ export default function TooltipLayer(props: Props) {
             positioning: "center-left",
         });
 
-        if (!isDrawMode && selectedFeatures.length === 0) {
+        if (
+            !isDrawMode &&
+            selectedFeatures.length === 0 &&
+            !isContextMenuOpen
+        ) {
             map.addOverlay(tooltip);
         }
 
@@ -58,7 +69,7 @@ export default function TooltipLayer(props: Props) {
             map.un("pointermove", handlePointerMove);
             map.removeOverlay(tooltip);
         };
-    }, [dataLayerRef, map, isDrawMode, selectedFeatures]);
+    }, [dataLayerRef, map, isDrawMode, selectedFeatures, isContextMenuOpen]);
 
     return null;
 }

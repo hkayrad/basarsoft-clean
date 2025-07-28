@@ -1,3 +1,5 @@
+import "../style/controls/controls.css";
+
 import Map from "ol/Map";
 import {
     MapPin,

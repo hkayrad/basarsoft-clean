@@ -1,0 +1,52 @@
+.context-menu {
+  position: fixed;
+  z-index: 1200;
+  display: none;
+  flex-direction: column;
+  background-color: #343434;
+  border: 1px solid #4a4a4a;
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 150px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  gap: 4px;
+}
+.context-menu.show {
+  display: flex;
+}
+.context-menu .context-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  padding: 8px 16px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 6px;
+}
+.context-menu .context-button:hover {
+  background-color: #5a5a5a;
+}
+.context-menu .context-button:active {
+  background-color: #6a6a6a;
+}
+.context-menu .context-button:disabled {
+  color: #888;
+  cursor: not-allowed;
+}
+.context-menu .context-button:disabled:hover {
+  background: none;
+}
+.context-menu .context-button.danger {
+  color: #ff6b6b;
+}
+.context-menu .context-button.danger:hover {
+  background-color: rgba(255, 107, 107, 0.1);
+}
+.context-menu .context-button.danger:active {
+  background-color: rgba(255, 107, 107, 0.2);
+}/*# sourceMappingURL=contextMenu.css.map */
