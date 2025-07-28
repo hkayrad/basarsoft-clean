@@ -54,7 +54,7 @@ export default function ControlLayer(props: Props) {
         setWktFeatures,
     } = props;
 
-    const [isControlsVisible, setIsControlsVisible] = useState(true);
+    const [isControlsVisible, setIsControlsVisible] = useState(false);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
 
     const [featureName, setFeatureName] = useState("");
