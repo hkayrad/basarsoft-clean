@@ -95,7 +95,7 @@ export default function EditFeatureModal({
                         onClick={handleClose}
                         disabled={isLoading}
                     >
-                        Cancel
+                        <X size={16} /> Cancel
                     </button>
                     <button
                         className="btn btn-primary"

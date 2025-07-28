@@ -48,15 +48,15 @@
   border-color: #8a8a8a;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
-#controls #draw-select, #controls #edit-type-select {
+#controls #draw-select,
+#controls #edit-type-select {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 12px;
-  border-top: 1px solid #6a6a6a;
-  padding-top: 16px;
 }
-#controls #draw-select div, #controls #edit-type-select div {
+#controls #draw-select div,
+#controls #edit-type-select div {
   display: flex;
   flex-direction: row;
   gap: 4px;
@@ -65,7 +65,8 @@
   padding: 4px;
   border: 1px solid #6a6a6a;
 }
-#controls #draw-select label, #controls #edit-type-select label {
+#controls #draw-select label,
+#controls #edit-type-select label {
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 500;
@@ -81,15 +82,18 @@
   background-color: transparent;
   border: 1px solid transparent;
 }
-#controls #draw-select label:hover, #controls #edit-type-select label:hover {
+#controls #draw-select label:hover,
+#controls #edit-type-select label:hover {
   background-color: rgba(255, 255, 255, 0.15);
 }
-#controls #draw-select label:has(input:checked), #controls #edit-type-select label:has(input:checked) {
+#controls #draw-select label:has(input:checked),
+#controls #edit-type-select label:has(input:checked) {
   background-color: #5a5a5a;
   border-color: #8a8a8a;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-#controls #draw-select input[type=radio], #controls #edit-type-select input[type=radio] {
+#controls #draw-select input[type=radio],
+#controls #edit-type-select input[type=radio] {
   display: none;
 }
 #controls #freehand-option {
@@ -183,6 +187,21 @@
 }
 #controls #drawing-controls button#cancel-draw:active {
   background-color: rgb(168.2876712329, 34.5205479452, 20.7123287671);
+}
+#controls .control-category {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#controls .category-label {
+  font-size: 10px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  font-weight: 500;
+  opacity: 0.7;
 }
 
 #collapse-button {
@@ -282,20 +301,20 @@
   transition: all 0.2s ease;
 }
 .dialog-button.primary {
-  background-color: #007bff;
+  background-color: #83c54d;
   color: #ffffff;
 }
 .dialog-button.primary:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: rgb(105.8305084746, 168.1949152542, 54.8050847458);
 }
 .dialog-button.primary:disabled {
   background-color: #6c757d;
   cursor: not-allowed;
 }
 .dialog-button.secondary {
-  background-color: #6c757d;
+  background-color: #e74c3c;
   color: #ffffff;
 }
 .dialog-button.secondary:hover {
-  background-color: #545b62;
+  background-color: rgb(213.698630137, 43.8356164384, 26.301369863);
 }/*# sourceMappingURL=controls.css.map */

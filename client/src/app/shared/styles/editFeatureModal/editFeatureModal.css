@@ -107,16 +107,16 @@
   cursor: not-allowed;
 }
 .modal-overlay .btn-primary {
-  background: #007bff;
+  background: #83c54d;
   color: white;
 }
 .modal-overlay .btn-primary:hover:not(:disabled) {
-  background: #0056b3;
+  background: rgb(105.8305084746, 168.1949152542, 54.8050847458);
 }
 .modal-overlay .btn-secondary {
-  background: #6c757d;
+  background: #e74c3c;
   color: white;
 }
 .modal-overlay .btn-secondary:hover:not(:disabled) {
-  background: #545b62;
+  background: rgb(213.698630137, 43.8356164384, 26.301369863);
 }/*# sourceMappingURL=editFeatureModal.css.map */

@@ -1,3 +1,23 @@
+// SCSS Variables
+$color-dark-bg: #343434;
+$color-dark-border: #4a4a4a;
+$color-medium-bg: #5a5a5a;
+$color-light-border: #6a6a6a;
+$color-lighter-border: #7a7a7a;
+$color-lightest-border: #8a8a8a;
+$color-accent: #83c54d;
+$color-danger: #e74c3c;
+$color-white: #ffffff;
+$border-radius: 8px;
+$border-radius-small: 6px;
+$border-radius-round: 16px;
+$gap-small: 4px;
+$gap-medium: 8px;
+$gap-large: 12px;
+$gap-xl: 16px;
+$transition-fast: 0.2s ease;
+$transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -120,20 +140,20 @@
     }
 
     .btn-primary {
-        background: #007bff;
+        background: $color-accent;
         color: white;
     }
 
     .btn-primary:hover:not(:disabled) {
-        background: #0056b3;
+        background: darken($color-accent, 10%);
     }
 
     .btn-secondary {
-        background: #6c757d;
+        background: $color-danger;
         color: white;
     }
 
     .btn-secondary:hover:not(:disabled) {
-        background: #545b62;
+        background: darken($color-danger, 10%);
     }
 }

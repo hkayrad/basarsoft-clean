@@ -15,6 +15,7 @@ import {
     Undo,
     Move,
     Pencil,
+    Save,
 } from "lucide-react";
 import type VectorSource from "ol/source/Vector";
 import { useState } from "react";
@@ -150,6 +151,135 @@ export default function ControlLayer(props: Props) {
         setIsControlsVisible(!isControlsVisible);
     };
 
+    const renderDataControls = () => (
+        <div className="control-category">
+            <span className="category-label">Data</span>
+            <button
+                id="toggle-feature-layer"
+                onClick={handleFeatureLayerToggle}
+            >
+                {isFeatureLayerVisible ? (
+                    <>
+                        <Eye size={16} /> Hide Data
+                    </>
+                ) : (
+                    <>
+                        <EyeClosed size={16} /> Show Data
+                    </>
+                )}
+            </button>
+        </div>
+    );
+
+    const renderDrawTypeOptions = () => (
+        <div id="draw-select">
+            <div>
+                <label>
+                    <input
+                        type="radio"
+                        name="drawType"
+                        value="Point"
+                        checked={drawType === "Point"}
+                        onChange={handleDrawTypeChange}
+                    />
+                    <MapPin size={16} />
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="drawType"
+                        value="LineString"
+                        checked={drawType === "LineString"}
+                        onChange={handleDrawTypeChange}
+                    />
+                    <Minus size={16} />
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="drawType"
+                        value="Polygon"
+                        checked={drawType === "Polygon"}
+                        onChange={handleDrawTypeChange}
+                    />
+                    <Square size={16} />
+                </label>
+            </div>
+        </div>
+    );
+
+    const renderDrawingControls = () => (
+        <div id="drawing-controls">
+            <button
+                id="save-draw"
+                onClick={handleSaveDrawing}
+                disabled={!newFeatures || newFeatures.length === 0}
+            >
+                <Check size={16} />
+            </button>
+            <button id="undo-draw" onClick={handleUndoDrawing}>
+                <Undo size={16} />
+            </button>
+            <button id="cancel-draw" onClick={handleCancelDrawing}>
+                <X size={16} />
+            </button>
+        </div>
+    );
+
+    const renderDrawControls = () => (
+        <div className="control-category">
+            <span className="category-label">Draw</span>
+            {renderDrawTypeOptions()}
+            <div id="freehand-option">
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={isFreehand}
+                        onChange={handleFreehandToggle}
+                    />
+                    Freehand
+                </label>
+            </div>
+            {!isDrawMode ? (
+                <button id="toggle-draw" onClick={handleStartDrawing}>
+                    <Edit3 size={16} /> Start Drawing
+                </button>
+            ) : (
+                renderDrawingControls()
+            )}
+        </div>
+    );
+
+    const renderEditControls = () => (
+        <div className="control-category">
+            <span className="category-label">Edit</span>
+            <div id="edit-type-select">
+                <div>
+                    <label>
+                        <input
+                            type="radio"
+                            name="editType"
+                            value="Edit"
+                            checked={editType === "Edit"}
+                            onChange={handleEditTypeChange}
+                        />
+                        <Pencil size={16} />
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            name="editType"
+                            value="Translate"
+                            checked={editType === "Translate"}
+                            onChange={handleEditTypeChange}
+                        />
+                        <Move size={16} />
+                    </label>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <>
             {isSaveDialogOpen && (
@@ -175,7 +305,7 @@ export default function ControlLayer(props: Props) {
                                 onClick={handleSaveFeature}
                                 disabled={!featureName.trim()}
                             >
-                                <Check size={16} /> Save
+                                <Save size={16} /> Save
                             </button>
                             <button
                                 className="dialog-button secondary"
@@ -187,6 +317,18 @@ export default function ControlLayer(props: Props) {
                     </div>
                 </div>
             )}
+            <div
+                id="controls"
+                style={{
+                    transform: isControlsVisible
+                        ? "translateX(0)"
+                        : "translateX(100%)",
+                }}
+            >
+                {renderDataControls()}
+                {renderDrawControls()}
+                {renderEditControls()}
+            </div>
             <div
                 id="collapse-button"
                 onClick={toggleControlsVisibility}
@@ -201,115 +343,6 @@ export default function ControlLayer(props: Props) {
                 ) : (
                     <Layers2 size={16} />
                 )}
-            </div>
-            <div
-                id="controls"
-                style={{
-                    transform: isControlsVisible
-                        ? "translateX(0)"
-                        : "translateX(100%)",
-                }}
-            >
-                <button onClick={handleFeatureLayerToggle}>
-                    {isFeatureLayerVisible ? (
-                        <>
-                            <Eye size={16} /> Hide Data
-                        </>
-                    ) : (
-                        <>
-                            <EyeClosed size={16} /> Show Data
-                        </>
-                    )}
-                </button>
-                <div id="draw-select">
-                    <div>
-                        <label>
-                            <input
-                                type="radio"
-                                name="drawType"
-                                value="Point"
-                                checked={drawType === "Point"}
-                                onChange={handleDrawTypeChange}
-                            />
-                            <MapPin size={16} />
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="drawType"
-                                value="LineString"
-                                checked={drawType === "LineString"}
-                                onChange={handleDrawTypeChange}
-                            />
-                            <Minus size={16} />
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="drawType"
-                                value="Polygon"
-                                checked={drawType === "Polygon"}
-                                onChange={handleDrawTypeChange}
-                            />
-                            <Square size={16} />
-                        </label>
-                    </div>
-                </div>
-                <div id="freehand-option">
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={isFreehand}
-                            onChange={handleFreehandToggle}
-                        />
-                        Freehand
-                    </label>
-                </div>
-                {!isDrawMode ? (
-                    <button id="toggle-draw" onClick={handleStartDrawing}>
-                        <Edit3 size={16} /> Start Drawing
-                    </button>
-                ) : (
-                    <div id="drawing-controls">
-                        <button
-                            id="save-draw"
-                            onClick={handleSaveDrawing}
-                            disabled={!newFeatures || newFeatures.length === 0}
-                        >
-                            <Check size={16} />
-                        </button>
-                        <button id="undo-draw" onClick={handleUndoDrawing}>
-                            <Undo size={16} />
-                        </button>
-                        <button id="cancel-draw" onClick={handleCancelDrawing}>
-                            <X size={16} />
-                        </button>
-                    </div>
-                )}
-                <div id="edit-type-select">
-                    <div>
-                        <label>
-                            <input
-                                type="radio"
-                                name="editType"
-                                value="Edit"
-                                checked={editType === "Edit"}
-                                onChange={handleEditTypeChange}
-                            />
-                            <Pencil size={16} />
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="editType"
-                                value="Translate"
-                                checked={editType === "Translate"}
-                                onChange={handleEditTypeChange}
-                            />
-                            <Move size={16} />
-                        </label>
-                    </div>
-                </div>
             </div>
         </>
     );
