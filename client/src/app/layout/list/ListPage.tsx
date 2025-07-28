@@ -1,10 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
-import { Trash2, ChevronLeft, ChevronRight, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import {
+    Trash2,
+    ChevronLeft,
+    ChevronRight,
+    Search,
+    ArrowUpDown,
+    ArrowUp,
+    ArrowDown,
+    MapPin,
+} from "lucide-react";
 import type { WktFeature } from "../../../types";
 import { getAllFeatures, getFeatureCount } from "../../../lib/api/features/get";
 
 import "./style/list.css";
 import { deleteFeature } from "../../../lib/api/features/delete";
+import { useNavigate } from "react-router";
 
 export default function ListPage() {
     const [features, setFeatures] = useState<WktFeature[]>([]);
@@ -14,6 +24,8 @@ export default function ListPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState("Id");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+    const navigate = useNavigate();
 
     const fetchTotalCount = useCallback(async () => {
         const count = await getFeatureCount(searchQuery);
@@ -66,7 +78,15 @@ export default function ListPage() {
 
     const getSortIcon = (field: string) => {
         if (sortBy !== field) return <ArrowUpDown size={14} />;
-        return sortOrder === "asc" ? <ArrowUp size={14} /> : <ArrowDown size={14} />;
+        return sortOrder === "asc" ? (
+            <ArrowUp size={14} />
+        ) : (
+            <ArrowDown size={14} />
+        );
+    };
+
+    const handleGotoFeature = (id: number) => {
+        navigate(`/map?gotoId=${id}`);
     };
 
     const handleDeleteFeature = async (id: number) => {
@@ -109,12 +129,20 @@ export default function ListPage() {
                         <button
                             className={`btn btn-sort ${sortOrder}`}
                             onClick={() => {
-                                setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+                                setSortOrder(
+                                    sortOrder === "asc" ? "desc" : "asc"
+                                );
                                 setCurrentPage(1);
                             }}
-                            title={`Sort ${sortOrder === "asc" ? "Descending" : "Ascending"}`}
+                            title={`Sort ${
+                                sortOrder === "asc" ? "Descending" : "Ascending"
+                            }`}
                         >
-                            {sortOrder === "asc" ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
+                            {sortOrder === "asc" ? (
+                                <ArrowUp size={16} />
+                            ) : (
+                                <ArrowDown size={16} />
+                            )}
                         </button>
                     </div>
                     <label>
@@ -167,12 +195,15 @@ export default function ListPage() {
                                 <td className="geometry-cell">{feature.wkt}</td>
                                 <td>
                                     <div className="action-buttons">
-                                        {/* <button
+                                        <button
                                             className="btn btn-edit"
-                                            title="Edit"
+                                            title="GoTo"
+                                            onClick={() => {
+                                                handleGotoFeature(feature.id!);
+                                            }}
                                         >
-                                            <Edit size={16} />
-                                        </button> */}
+                                            <MapPin size={16} />
+                                        </button>
                                         <button
                                             className="btn btn-delete"
                                             title="Delete"

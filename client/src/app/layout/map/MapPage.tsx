@@ -42,6 +42,7 @@ export default function MapPage() {
         <>
             <div id="mouse-position" className="mouse-position"></div>
             <MapComponent
+                map={map}
                 mapRef={mapRef}
                 setMap={setMap}
                 setWktFeatures={setWktFeatures}
@@ -103,10 +104,7 @@ export default function MapPage() {
                     setSelectedFeatures={setSelectedFeatures}
                 />
                 {editType === "Edit" ? (
-                    <EditLayer
-                        map={map}
-                        selectedFeatures={selectedFeatures}
-                    />
+                    <EditLayer map={map} selectedFeatures={selectedFeatures} />
                 ) : (
                     <TranslateLayer
                         map={map}

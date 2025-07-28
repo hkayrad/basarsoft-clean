@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
 import { OSM } from "ol/source";
@@ -8,9 +8,12 @@ import { createStringXY } from "ol/coordinate";
 import MousePosition from "ol/control/MousePosition";
 import { defaults as defaultControls } from "ol/control";
 import type { WktFeature as WktFeature } from "../../../types";
-import { getAllFeatures } from "../../../lib/api/features/get";
+import { getAllFeatures, getFeatureById } from "../../../lib/api/features/get";
+import { useSearchParams } from "react-router";
+import { WKT } from "ol/format";
 
 type Props = {
+    map: Map | null;
     mapRef: React.RefObject<HTMLDivElement>;
     setMap: (map: Map | null) => void;
     children?: React.ReactNode;
@@ -18,7 +21,24 @@ type Props = {
 };
 
 export default function MapComponent(props: Props) {
-    const { mapRef, setMap, children, setWktFeatures } = props;
+    const { map, mapRef, setMap, children, setWktFeatures } = props;
+
+    const [gotoFeature, setGotoFeature] = useState<WktFeature | null>(null);
+
+    const [searchParams] = useSearchParams();
+    const gotoFeatureId = searchParams.get("gotoId");
+
+    const mousePositionElement = document.getElementById(
+        "mouse-position"
+    ) as HTMLElement;
+
+    const handleGotoFeature = async (id: number | null) => {
+        if (!id) return null;
+
+        const feature = await getFeatureById(id);
+        setGotoFeature(feature);
+        return null;
+    };
 
     useEffect(() => {
         const MAP_CONFIG = {
@@ -30,11 +50,12 @@ export default function MapComponent(props: Props) {
             },
         };
 
+        if (mousePositionElement) mousePositionElement.innerHTML = ""; // Clear previous content
         const mousePosControl = new MousePosition({
             coordinateFormat: createStringXY(4),
             projection: MAP_CONFIG.projection.code,
             className: "mouse-position",
-            target: document.getElementById("mouse-position") as HTMLElement,
+            target: mousePositionElement,
         });
 
         const view = new View({
@@ -54,13 +75,35 @@ export default function MapComponent(props: Props) {
             view: view,
             layers: [tileLayer],
             controls: defaultControls().extend([mousePosControl]),
-            
         });
 
         getAllFeatures(setWktFeatures);
 
         setMap(map);
-    }, [mapRef]);
+
+        handleGotoFeature(gotoFeatureId ? parseInt(gotoFeatureId) : null);
+
+        return () => {
+            map.setTarget(undefined);
+            setMap(null);
+            setGotoFeature(null);
+        };
+    }, [mapRef, setMap, setWktFeatures, gotoFeatureId, mousePositionElement]);
+
+    useEffect(() => {
+        if (gotoFeature && map) {
+            const view = map.getView();
+            if (view) {
+                const geometry = new WKT().readGeometry(gotoFeature.wkt);
+                const extent = geometry.getExtent();
+                view.fit(extent, {
+                    duration: 1000,
+                    maxZoom: 15,
+                    padding: [100, 100, 100, 100],
+                });
+            }
+        }
+    }, [map, gotoFeature]);
 
     return (
         <>
