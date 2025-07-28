@@ -134,6 +134,7 @@ export default function ContextMenuLayer(props: Props) {
         await getAllFeatures(setWktFeatures);
         setIsModalOpen(false);
         setEditingFeature(null);
+        setSelectedFeatures([]);
     };
 
     const handleCloseModal = () => {
@@ -168,7 +169,7 @@ export default function ContextMenuLayer(props: Props) {
                         className="context-button"
                         onClick={handleEditFeature}
                     >
-                        <Pencil size={16} /> Edit Name
+                        <Pencil size={16} /> Edit Feature
                     </button>
                 }
                 <button

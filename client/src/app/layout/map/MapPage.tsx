@@ -1,6 +1,6 @@
 import "ol/ol.css";
 
-import MapComponent from "./MapComponent";
+import MapLayer from "./layers/MapLayer";
 import DrawLayer from "./layers/DrawLayer";
 import ControlLayer from "./layers/ControlLayer";
 
@@ -41,8 +41,7 @@ export default function MapPage() {
 
     return (
         <>
-            <div id="mouse-position" className="mouse-position"></div>
-            <MapComponent
+            <MapLayer
                 map={map}
                 mapRef={mapRef}
                 setMap={setMap}
@@ -126,7 +125,7 @@ export default function MapPage() {
                             selectedFeatures={selectedFeatures}
                         />
                     ))}
-            </MapComponent>
+            </MapLayer>
         </>
     );
 }

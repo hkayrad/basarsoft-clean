@@ -1,5 +1,4 @@
-import "./style/map/map.css"
-
+import "../style/map/map.css"
 import { useEffect, useState } from "react";
 import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
@@ -9,12 +8,13 @@ import { Projection } from "ol/proj";
 import { createStringXY } from "ol/coordinate";
 import MousePosition from "ol/control/MousePosition";
 import { defaults as defaultControls, ZoomSlider } from "ol/control";
-import type { WktFeature as WktFeature } from "../../../types";
-import { getAllFeatures, getFeatureById } from "../../../lib/api/features/get";
+import type { WktFeature as WktFeature } from "../../../../types";
+import {
+    getAllFeatures,
+    getFeatureById,
+} from "../../../../lib/api/features/get";
 import { useSearchParams } from "react-router";
 import { WKT } from "ol/format";
-
-
 
 type Props = {
     map: Map | null;
@@ -24,7 +24,7 @@ type Props = {
     setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>;
 };
 
-export default function MapComponent(props: Props) {
+export default function MapLayer(props: Props) {
     const { map, mapRef, setMap, children, setWktFeatures } = props;
 
     const [gotoFeature, setGotoFeature] = useState<WktFeature | null>(null);
@@ -113,6 +113,7 @@ export default function MapComponent(props: Props) {
 
     return (
         <>
+            <div id="mouse-position" className="mouse-position"></div>
             <div id="map" ref={mapRef}></div>
             {children}
         </>
