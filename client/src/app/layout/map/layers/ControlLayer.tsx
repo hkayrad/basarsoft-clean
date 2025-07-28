@@ -72,12 +72,14 @@ export default function ControlLayer(props: Props) {
     };
 
     const handleSaveDrawing = () => {
-        if (map) setIsDrawMode(false);
+        if (!map) return;
+        setIsDrawMode(false);
         setIsSaveDialogOpen(true);
     };
 
     const handleCancelDrawing = () => {
-        if (map) setIsDrawMode(false);
+        if (!map) return;
+        setIsDrawMode(false);
         console.log("Drawing cancelled");
         drawSourceRef.current.clear();
         setNewFeatures([]);

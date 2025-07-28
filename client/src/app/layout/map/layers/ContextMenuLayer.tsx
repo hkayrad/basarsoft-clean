@@ -1,8 +1,8 @@
-import { Pencil, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import "../style/contextMenu/contextMenu.css";
 import type Feature from "ol/Feature";
 import Map from "ol/Map";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import type { WktFeature } from "../../../../types";
 import { deleteFeature } from "../../../../lib/api/features/delete";
 import { getAllFeatures } from "../../../../lib/api/features/get";
@@ -12,7 +12,7 @@ type Props = {
     mapRef: React.RefObject<HTMLDivElement>;
     selectedFeatures: Feature[];
     isContextMenuOpen: boolean;
-    setIsContextMenuOpen: (isOpen: boolean) => void;
+    setIsContextMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>;
     setSelectedFeatures: React.Dispatch<React.SetStateAction<Feature[]>>;
 };
@@ -67,10 +67,8 @@ export default function ContextMenuLayer(props: Props) {
         contextMenu.style.display = isContextMenuOpen ? "flex" : "none";
     }, [isContextMenuOpen]);
 
-    const handleDeleteFeature = async () => {
+    const handleDeleteFeature = useCallback(async () => {
         if (selectedFeatures.length === 0) return;
-
-        console.log("Deleting features:", selectedFeatures);
 
         try {
             const deletePromises = selectedFeatures.map(async (feature) => {
@@ -86,23 +84,43 @@ export default function ContextMenuLayer(props: Props) {
             setSelectedFeatures([]);
             setIsContextMenuOpen(false);
         }
-    };
+    }, [
+        selectedFeatures,
+        setIsContextMenuOpen,
+        setSelectedFeatures,
+        setWktFeatures,
+    ]);
 
-    const handleEditFeature = () => {
-        if (selectedFeatures.length === 0) return;
+    // const handleEditFeature = () => {
+    //     if (selectedFeatures.length === 0) return;
 
-        console.log("Editing features:", selectedFeatures);
-        setIsContextMenuOpen(false);
+    //     console.log("Editing features:", selectedFeatures);
+    //     setIsContextMenuOpen(false);
 
-        // Implement feature editing logic here
-        // For example, open a modal to edit feature properties
-    };
+    //     // Implement feature editing logic here
+    //     // For example, open a modal to edit feature properties
+    // };
+
+    // useEffect(() => {
+    //     if (selectedFeatures.length === 0) return;
+
+    //     window.addEventListener("keydown", (event) => {
+    //         if (event.key === "Delete") {
+    //             handleDeleteFeature();
+    //         }
+    //     });
+    // }, [
+    //     handleDeleteFeature,
+    //     selectedFeatures,
+    //     setIsContextMenuOpen,
+    //     setSelectedFeatures,
+    // ]);
 
     return (
         <div id="context-menu" className="context-menu" ref={contextMenuRef}>
-            <button className="context-button" onClick={handleEditFeature}>
+            {/* {<button className="context-button" onClick={handleEditFeature}>
                 <Pencil size={16} /> Edit Name
-            </button>
+            </button>} */}
             <button
                 className="context-button danger"
                 onClick={handleDeleteFeature}
