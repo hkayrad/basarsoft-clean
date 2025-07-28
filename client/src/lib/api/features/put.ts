@@ -4,7 +4,8 @@ import agent from "../agent";
 const updateFeature = async (id: number, featureData: WktFeature) => {
     try {
         const response = await agent.put(`/features/${id}`, featureData);
-        return response.data.data;
+        
+        return response.data;
     }
     catch (error) {
         console.error("Error updating feature:", error);

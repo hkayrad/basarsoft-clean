@@ -1,11 +1,14 @@
-import { Trash } from "lucide-react";
+import { Pencil, Trash } from "lucide-react";
 import "../style/contextMenu/contextMenu.css";
 import type Feature from "ol/Feature";
 import Map from "ol/Map";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { WktFeature } from "../../../../types";
 import { deleteFeature } from "../../../../lib/api/features/delete";
 import { getAllFeatures } from "../../../../lib/api/features/get";
+import EditFeatureModal from "../../../shared/EditFeatureModal";
+import { WKT } from "ol/format";
+import { updateFeature } from "../../../../lib/api/features/put";
 
 type Props = {
     map: Map | null;
@@ -29,6 +32,11 @@ export default function ContextMenuLayer(props: Props) {
     } = props;
 
     const contextMenuRef = useRef<HTMLDivElement>(null);
+
+    const [editingFeature, setEditingFeature] = useState<WktFeature | null>(
+        null
+    );
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         if (!map || !mapRef.current) return;
@@ -91,15 +99,47 @@ export default function ContextMenuLayer(props: Props) {
         setWktFeatures,
     ]);
 
-    // const handleEditFeature = () => {
-    //     if (selectedFeatures.length === 0) return;
+    const handleEditFeature = () => {
+        if (selectedFeatures.length === 0) return;
 
-    //     console.log("Editing features:", selectedFeatures);
-    //     setIsContextMenuOpen(false);
+        if (selectedFeatures.length > 1) {
+            alert("Please select only one feature to edit.");
+            return;
+        }
 
-    //     // Implement feature editing logic here
-    //     // For example, open a modal to edit feature properties
-    // };
+        const feature: WktFeature = {
+            id: selectedFeatures[0].get("id"),
+            name: selectedFeatures[0].get("name") || "",
+            wkt: new WKT().writeFeature(selectedFeatures[0]) || "",
+        };
+
+        setEditingFeature(feature);
+        setIsModalOpen(true);
+        setIsContextMenuOpen(false);
+        setSelectedFeatures([]);
+
+        // Implement feature editing logic here
+        // For example, open a modal to edit feature properties
+    };
+
+    const handleSaveFeature = async (id: number, name: string, wkt: string) => {
+        const feature: WktFeature = {
+            name: name,
+            wkt: wkt,
+        };
+
+        console.log("Saving feature:", id, feature);
+
+        await updateFeature(id, feature);
+        await getAllFeatures(setWktFeatures);
+        setIsModalOpen(false);
+        setEditingFeature(null);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setEditingFeature(null);
+    };
 
     // useEffect(() => {
     //     if (selectedFeatures.length === 0) return;
@@ -117,16 +157,33 @@ export default function ContextMenuLayer(props: Props) {
     // ]);
 
     return (
-        <div id="context-menu" className="context-menu" ref={contextMenuRef}>
-            {/* {<button className="context-button" onClick={handleEditFeature}>
-                <Pencil size={16} /> Edit Name
-            </button>} */}
-            <button
-                className="context-button danger"
-                onClick={handleDeleteFeature}
+        <>
+            <div
+                id="context-menu"
+                className="context-menu"
+                ref={contextMenuRef}
             >
-                <Trash size={16} /> Delete Feature
-            </button>
-        </div>
+                {
+                    <button
+                        className="context-button"
+                        onClick={handleEditFeature}
+                    >
+                        <Pencil size={16} /> Edit Name
+                    </button>
+                }
+                <button
+                    className="context-button danger"
+                    onClick={handleDeleteFeature}
+                >
+                    <Trash size={16} /> Delete Feature
+                </button>
+            </div>
+            <EditFeatureModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                feature={editingFeature}
+                onSave={handleSaveFeature}
+            />
+        </>
     );
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { X, Save } from "lucide-react";
-import type { WktFeature } from "../../../types";
+import type { WktFeature } from "../../types";
+import "../shared/styles/editFeatureModal/editFeatureModal.css";
 
 type Props = {
     feature: WktFeature | null;

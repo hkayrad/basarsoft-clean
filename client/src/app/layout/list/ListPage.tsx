@@ -17,7 +17,7 @@ import "./style/list.css";
 import { deleteFeature } from "../../../lib/api/features/delete";
 import { useNavigate } from "react-router";
 import { updateFeature } from "../../../lib/api/features/put";
-import EditFeatureModal from "./EditFeatureModal";
+import EditFeatureModal from "../../shared/EditFeatureModal";
 
 export default function ListPage() {
     const [features, setFeatures] = useState<WktFeature[]>([]);
