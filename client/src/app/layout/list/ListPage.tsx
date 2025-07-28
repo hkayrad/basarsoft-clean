@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
     Trash2,
     ChevronLeft,
@@ -25,12 +25,15 @@ export default function ListPage() {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalCount, setTotalCount] = useState(0);
     const [searchQuery, setSearchQuery] = useState("");
+    const [inputValue, setInputValue] = useState("");
     const [sortBy, setSortBy] = useState("Id");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
     const [editingFeature, setEditingFeature] = useState<WktFeature | null>(
         null
     );
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const debounceRef = useRef<number>(0);
 
     const navigate = useNavigate();
 
@@ -69,9 +72,25 @@ export default function ListPage() {
     };
 
     const handleSearchChange = (value: string) => {
-        setSearchQuery(value);
-        setCurrentPage(1);
+        setInputValue(value);
+
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+
+        debounceRef.current = setTimeout(() => {
+            setSearchQuery(value);
+            setCurrentPage(1);
+        }, 300);
     };
+
+    useEffect(() => {
+        return () => {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+        };
+    }, []);
 
     const handleSortChange = (field: string) => {
         if (sortBy === field) {
@@ -134,7 +153,7 @@ export default function ListPage() {
                             <input
                                 type="text"
                                 placeholder="Search features..."
-                                value={searchQuery}
+                                value={inputValue}
                                 onChange={(e) =>
                                     handleSearchChange(e.target.value)
                                 }
