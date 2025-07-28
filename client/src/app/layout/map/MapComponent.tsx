@@ -60,7 +60,7 @@ export default function MapComponent(props: Props) {
         getAllFeatures(setWktFeatures);
 
         setMap(map);
-    }, [mapRef, setMap, setWktFeatures]);
+    }, [mapRef]);
 
     return (
         <>

@@ -11,6 +11,8 @@ import {
     Layers2,
     ChevronRight,
     Undo,
+    Move,
+    Pencil,
 } from "lucide-react";
 import type VectorSource from "ol/source/Vector";
 import { useState } from "react";
@@ -25,6 +27,8 @@ type Props = {
     setIsDrawMode: (isDrawMode: boolean) => void;
     drawType: "Point" | "LineString" | "Polygon";
     setDrawType: (drawType: "Point" | "LineString" | "Polygon") => void;
+    editType: "Edit" | "Translate";
+    setEditType: (editType: "Edit" | "Translate") => void;
     isFreehand: boolean;
     setIsFreehand: (isFreehand: boolean) => void;
     newFeatures?: WktFeature[];
@@ -43,6 +47,8 @@ export default function ControlLayer(props: Props) {
         setIsDrawMode,
         drawType,
         setDrawType,
+        editType,
+        setEditType,
         isFreehand,
         setIsFreehand,
         newFeatures,
@@ -79,6 +85,12 @@ export default function ControlLayer(props: Props) {
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         setDrawType(event.target.value as "Point" | "LineString" | "Polygon");
+    };
+
+    const handleEditTypeChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setEditType(event.target.value as "Edit" | "Translate");
     };
 
     const handleFreehandToggle = () => {
@@ -270,6 +282,30 @@ export default function ControlLayer(props: Props) {
                         </button>
                     </div>
                 )}
+                <div id="edit-type-select">
+                    <div>
+                        <label>
+                            <input
+                                type="radio"
+                                name="editType"
+                                value="Edit"
+                                checked={editType === "Edit"}
+                                onChange={handleEditTypeChange}
+                            />
+                            <Pencil size={16} />
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="editType"
+                                value="Translate"
+                                checked={editType === "Translate"}
+                                onChange={handleEditTypeChange}
+                            />
+                            <Move size={16} />
+                        </label>
+                    </div>
+                </div>
             </div>
         </>
     );

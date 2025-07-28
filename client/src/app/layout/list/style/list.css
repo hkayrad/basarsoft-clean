@@ -35,6 +35,12 @@
   background-color: #ffffff;
   font-size: 14px;
 }
+.list-controls select:hover {
+  cursor: pointer;
+}
+.list-controls select option {
+  cursor: pointer;
+}
 
 .table-container {
   overflow-x: auto;
@@ -161,6 +167,9 @@
   background-color: #3b82f6;
   color: #ffffff;
   border-color: #3b82f6;
+}
+.btn-page.active:hover:not(:disabled) {
+  background-color: #2563eb;
 }
 
 .empty-state {

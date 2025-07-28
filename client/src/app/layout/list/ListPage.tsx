@@ -95,6 +95,7 @@ export default function ListPage() {
                             Sort by:
                             <select
                                 value={sortBy}
+                                name="sort-select"
                                 onChange={(e) => {
                                     setSortBy(e.target.value);
                                     setCurrentPage(1);
@@ -120,6 +121,7 @@ export default function ListPage() {
                         Items per page:
                         <select
                             value={itemsPerPage}
+                            name="items-per-page-select"
                             onChange={(e) =>
                                 handleItemsPerPageChange(Number(e.target.value))
                             }

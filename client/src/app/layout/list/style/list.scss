@@ -56,6 +56,14 @@ $transition: all 0.2s;
         border-radius: $border-radius;
         background-color: $white;
         font-size: 14px;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        option {
+            cursor: pointer;
+        }
     }
 }
 
@@ -205,6 +213,10 @@ $transition: all 0.2s;
             background-color: $primary-color;
             color: $white;
             border-color: $primary-color;
+
+            &:hover:not(:disabled) {
+                background-color: $primary-hover;
+            }
         }
     }
 }

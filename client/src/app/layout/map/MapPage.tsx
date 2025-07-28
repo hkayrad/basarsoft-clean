@@ -16,6 +16,7 @@ import type VectorLayer from "ol/layer/Vector";
 import TooltipLayer from "./layers/TooltipLayer";
 import SelectLayer from "./layers/SelectLayer";
 import EditLayer from "./layers/EditLayer";
+import TranslateLayer from "./layers/TranslateLayer";
 
 export default function MapPage() {
     const mapRef = useRef<HTMLDivElement>(null!);
@@ -28,6 +29,7 @@ export default function MapPage() {
     const [drawType, setDrawType] = useState<
         "Point" | "LineString" | "Polygon"
     >("Point");
+    const [editType, setEditType] = useState<"Edit" | "Translate">("Edit");
     const [newFeatures, setNewFeatures] = useState<WktFeature[]>([]);
     const [wktFeatures, setWktFeatures] = useState<WktFeature[]>([]);
     const [selectedFeatures, setSelectedFeatures] = useState<Feature[]>([]);
@@ -57,6 +59,8 @@ export default function MapPage() {
                     setIsDrawMode={setIsDrawMode}
                     drawType={drawType}
                     setDrawType={setDrawType}
+                    editType={editType}
+                    setEditType={setEditType}
                     isFreehand={isFreehand}
                     setIsFreehand={setIsFreehand}
                     newFeatures={newFeatures}
@@ -98,7 +102,17 @@ export default function MapPage() {
                     isDrawMode={isDrawMode}
                     setSelectedFeatures={setSelectedFeatures}
                 />
-                <EditLayer map={map} selectedFeatures={selectedFeatures} />
+                {editType === "Edit" ? (
+                    <EditLayer
+                        map={map}
+                        selectedFeatures={selectedFeatures}
+                    />
+                ) : (
+                    <TranslateLayer
+                        map={map}
+                        selectedFeatures={selectedFeatures}
+                    />
+                )}
             </MapComponent>
         </>
     );
