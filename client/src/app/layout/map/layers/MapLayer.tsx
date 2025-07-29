@@ -1,8 +1,8 @@
-import "../style/map/map.css"
+import "../style/map/map.css";
 import { useEffect, useState } from "react";
 import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
-import { OSM } from "ol/source";
+import { OSM, XYZ } from "ol/source";
 import type { Units } from "ol/proj/Units";
 import { Projection } from "ol/proj";
 import { createStringXY } from "ol/coordinate";
@@ -73,13 +73,32 @@ export default function MapLayer(props: Props) {
         });
 
         const tileLayer = new TileLayer({
-            source: new OSM(),
+            source: new OSM({
+                wrapX: true,
+            }),
+            zIndex: -2,
+        });
+
+        const turkeyLayer = new TileLayer({
+            source: new XYZ({
+                url: "/turkey-tiles/{z}/{x}/{y}.png",
+            }),
+            zIndex: -1,
+            maxZoom: 11,
+        });
+
+        const eskisehirLayer = new TileLayer({
+            source: new XYZ({
+                url: "/eskisehir-tiles/{z}/{x}/{y}.png",
+            }),
+            zIndex: 0,
+            maxZoom: 13,
         });
 
         const map = new Map({
             target: mapRef.current,
             view: view,
-            layers: [tileLayer],
+            layers: [turkeyLayer, eskisehirLayer, tileLayer],
             controls: defaultControls().extend([mousePosControl, zoomSlider]),
         });
 
@@ -102,6 +121,7 @@ export default function MapLayer(props: Props) {
             if (view) {
                 const geometry = new WKT().readGeometry(gotoFeature.wkt);
                 const extent = geometry.getExtent();
+                console.log("Goto feature extent:", extent);
                 view.fit(extent, {
                     duration: 1000,
                     maxZoom: 15,

@@ -2,22 +2,28 @@ import { click } from "ol/events/condition";
 import Select from "ol/interaction/Select";
 import Map from "ol/Map";
 import { useEffect, type Dispatch } from "react";
-import type { Feature } from "ol";
+import { type Feature } from "ol";
+import type VectorLayer from "ol/layer/Vector";
 
 type Props = {
     map: Map | null;
     isDrawMode: boolean;
     setSelectedFeatures: Dispatch<React.SetStateAction<Feature[]>>;
+    dataLayerRef: React.RefObject<VectorLayer>;
 };
 
 export default function SelectLayer(props: Props) {
-    const { map, isDrawMode, setSelectedFeatures } = props;
+    const { map, isDrawMode, setSelectedFeatures, dataLayerRef } = props;
 
     useEffect(() => {
-        if (!map || isDrawMode) return;
+        if (!map || isDrawMode || !dataLayerRef.current) return;
 
         const clickSelect = new Select({
             condition: click,
+            multi: true,
+            filter: (feature, layer) => {
+                return layer === dataLayerRef.current;
+            },
         });
 
         clickSelect.on("select", (event) => {
@@ -36,7 +42,7 @@ export default function SelectLayer(props: Props) {
         return () => {
             map.removeInteraction(clickSelect);
         };
-    }, [map, isDrawMode, setSelectedFeatures]);
+    }, [map, isDrawMode, setSelectedFeatures, dataLayerRef]);
 
     return null;
 }

@@ -112,6 +112,7 @@ export default function MapPage() {
                     map={map}
                     isDrawMode={isDrawMode}
                     setSelectedFeatures={setSelectedFeatures}
+                    dataLayerRef={dataLayerRef}
                 />
                 {!isContextMenuOpen &&
                     (editType === "Edit" ? (

@@ -52,6 +52,8 @@ export default function EditFeatureModal({
     return (
         <div className="modal-overlay" onClick={handleClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                {" "}
+                {/* Prevent the parent event to cascade further */}
                 <div className="modal-header">
                     <h2>Edit Feature</h2>
                     <button
@@ -62,7 +64,6 @@ export default function EditFeatureModal({
                         <X size={20} />
                     </button>
                 </div>
-
                 <div className="modal-body">
                     <div className="form-group">
                         <label htmlFor="feature-name">Name:</label>
@@ -88,7 +89,6 @@ export default function EditFeatureModal({
                         />
                     </div>
                 </div>
-
                 <div className="modal-footer">
                     <button
                         className="btn btn-secondary"

@@ -47,6 +47,9 @@ export default function TooltipLayer(props: Props) {
             );
 
             if (hoveredFeature && dataLayerRef.current) {
+                if (!dataLayerRef.current.getSource()!.getFeatures().includes(hoveredFeature)) 
+                    return;
+
                 const featureName =
                     hoveredFeature.get("name") || "Unknown Feature";
                 const featureId = hoveredFeature.get("id") || "";
