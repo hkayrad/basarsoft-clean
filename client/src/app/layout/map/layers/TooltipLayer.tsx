@@ -108,7 +108,7 @@ export default function TooltipLayer(props: Props) {
             map.un("pointermove", handlePointerMove);
             map.removeOverlay(tooltip);
         };
-    }, [dataLayerRef, map, isDrawMode, selectedFeatures, isContextMenuOpen]);
+    }, [dataLayerRef, map, isDrawMode, selectedFeatures, isContextMenuOpen, roadLayerRef]);
 
     return null;
 }
