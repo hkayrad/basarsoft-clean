@@ -253,4 +253,24 @@ public class PostgresqlFeaturesService(IUnitOfWork unitOfWork) : IFeaturesServic
             return Response<int>.UnhandledError(MessagesResourceHelper.GetString("UnexpectedError", ex.Message));
         }
     }
+
+    public async Task<Response<List<Feature>>> GetFeaturesByBoundingBox(double minX, double minY, double maxX, double maxY)
+    {
+        if (minX >= maxX || minY >= maxY)
+            return Response<List<Feature>>.ValidationError(MessagesResourceHelper.GetString("InvalidBoundingBox"));
+
+        try
+        {
+            var features = await _unitOfWork.FeaturesRepository.GetByBoundingBoxAsync(minX, minY, maxX, maxY);
+            return Response<List<Feature>>.Success(features, MessagesResourceHelper.GetString("FeaturesRetrievedByBoundingBox"));
+        }
+        catch (NpgsqlException ex)
+        {
+            return Response<List<Feature>>.DbError(MessagesResourceHelper.GetString("DatabaseError", ex.Message));
+        }
+        catch (Exception ex)
+        {
+            return Response<List<Feature>>.UnhandledError(MessagesResourceHelper.GetString("UnexpectedError", ex.Message));
+        }
+    }
 }

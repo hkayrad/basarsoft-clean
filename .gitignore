@@ -485,3 +485,6 @@ $RECYCLE.BIN/
 
 eskisehir-tiles/
 turkey-tiles/
+
+eskisehir-tiles/**/*
+turkey-tiles/**/*

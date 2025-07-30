@@ -14,4 +14,5 @@ public interface IFeaturesService
     Task<Response<Feature>> UpdateFeatureAsync(int id, UpdateFeatureDto updateFeatureDto);
     Task<Response<bool>> DeleteFeatureAsync(int id);
     Task<Response<int>> GetFeatureCountAsync(string? query);
+    Task<Response<List<Feature>>> GetFeaturesByBoundingBox(double minX, double minY, double maxX, double maxY);
 }

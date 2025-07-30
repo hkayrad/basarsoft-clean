@@ -78,5 +78,17 @@ namespace API.Controllers
         {
             return await _featureService.GetFeatureCountAsync(query);
         }
+
+        [HttpGet("getByBoundingBox")]
+        [MapToApiVersion("1.0")]
+        public async Task<Response<List<Feature>>> GetFeatureByBoundingBox(
+            [FromQuery(Name = "minX")] double minX,
+            [FromQuery(Name = "minY")] double minY,
+            [FromQuery(Name = "maxX")] double maxX,
+            [FromQuery(Name = "maxY")] double maxY
+        )
+        {
+            return await _featureService.GetFeaturesByBoundingBox(minX, minY, maxX, maxY);
+        }
     }
 }

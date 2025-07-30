@@ -88,6 +88,15 @@
     <data name="InvalidId" xml:space="preserve">
         <value>Invalid feature ID</value>
     </data>
+    <data name="InvalidSortByProperty" xml:space="preserve">
+        <value>Invalid sort property. Use 'Id' or 'Name'.</value>
+    </data>
+    <data name="InvalidSortOrderProperty" xml:space="preserve">
+        <value>Invalid sort order property. Use 'ASC' or 'DESC'.</value>
+    </data>
+    <data name="InvalidBoundingBox" xml:space="preserve">
+        <value>Invalid bounding box coordinates. Ensure minX &lt; maxX and minY &lt; maxY.</value>
+    </data>
     <!-- ___________ -->
 
     <!-- Features Service Messages -->
@@ -117,11 +126,8 @@
     <data name="FeatureCountRetrievedSuccessfully" xml:space="preserve">
         <value>Feature count retrieved successfully.</value>
     </data>
-    <data name="InvalidSortByProperty" xml:space="preserve">
-        <value>Invalid sort property. Use 'Id' or 'Name'.</value>
-    </data>
-    <data name="InvalidSortOrderProperty" xml:space="preserve">
-        <value>Invalid sort order property. Use 'ASC' or 'DESC'.</value>
+    <data name="FeaturesRetrievedByBoundingBox" xml:space="preserve">
+        <value>Features retrieved successfully by bounding box.</value>
     </data>
     <!-- ___________ -->
 
