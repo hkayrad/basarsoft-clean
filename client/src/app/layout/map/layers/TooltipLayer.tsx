@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { Overlay } from "ol";
 import type VectorLayer from "ol/layer/Vector";
 import type WebGLVectorLayer from "ol/layer/WebGLVector";
+import { getArea } from "ol/sphere";
+import type { Polygon } from "ol/geom";
 
 type Props = {
     map: Map | null;
@@ -75,6 +77,24 @@ export default function TooltipLayer(props: Props) {
                         <p><strong>${featureName}</strong></p><br />
                         ID: ${featureId}
                     `;
+
+                if (hoveredFeature.getGeometry()?.getType() === "Polygon") {
+                    const area = getArea(
+                        hoveredFeature.getGeometry() as Polygon,
+                        { projection: "EPSG:4326" }
+                    );
+
+                    if (area > 10000) {
+                        tooltipElement.innerHTML += `<br /><br /><p>Area: ${
+                            Math.round((area / 1000000) * 100) / 100
+                        } km²</p>`;
+                    } else {
+                        tooltipElement.innerHTML += `<br /><br /><p>Area: ${
+                            Math.round(area * 100) / 100
+                        } m²</p>`;
+                    }
+                }
+
                 tooltip.setPosition(event.coordinate);
             } else {
                 tooltipElement.style.display = "none";

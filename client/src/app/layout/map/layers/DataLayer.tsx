@@ -42,12 +42,6 @@ export default function DataLayer(props: Props) {
 
         const vectorLayer = new VectorLayer({
             source: vectorSource,
-            style: {
-                "circle-radius": 4,
-                "circle-fill-color": "#ffffff80",
-                "circle-stroke-color": "#3388ff",
-                "circle-stroke-width": 2,
-            },
             zIndex: 1,
         });
 
