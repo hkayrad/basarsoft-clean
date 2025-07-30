@@ -114,6 +114,7 @@ export default function MapPage() {
                     map={map}
                     isContextMenuOpen={isContextMenuOpen}
                     dataLayerRef={dataLayerRef}
+                    roadLayerRef={roadLayerRef}
                     isDrawMode={isDrawMode}
                     selectedFeatures={selectedFeatures}
                 />

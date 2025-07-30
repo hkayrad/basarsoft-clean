@@ -2,10 +2,12 @@ import { Feature, Map, MapBrowserEvent } from "ol";
 import { useEffect } from "react";
 import { Overlay } from "ol";
 import type VectorLayer from "ol/layer/Vector";
+import type WebGLVectorLayer from "ol/layer/WebGLVector";
 
 type Props = {
     map: Map | null;
     dataLayerRef: React.RefObject<VectorLayer>;
+    roadLayerRef: React.RefObject<WebGLVectorLayer>;
     isDrawMode: boolean;
     isContextMenuOpen: boolean;
     selectedFeatures: Feature[];
@@ -15,6 +17,7 @@ export default function TooltipLayer(props: Props) {
     const {
         map,
         dataLayerRef,
+        roadLayerRef,
         isDrawMode,
         isContextMenuOpen,
         selectedFeatures,
@@ -46,8 +49,21 @@ export default function TooltipLayer(props: Props) {
                 (feature) => feature
             );
 
-            if (hoveredFeature && dataLayerRef.current) {
-                if (!dataLayerRef.current.getSource()!.getFeatures().includes(hoveredFeature)) 
+            if (
+                hoveredFeature &&
+                dataLayerRef.current &&
+                roadLayerRef.current
+            ) {
+                if (
+                    !dataLayerRef.current
+                        .getSource()!
+                        .getFeatures()
+                        .includes(hoveredFeature) &&
+                    !roadLayerRef.current
+                        .getSource()!
+                        .getFeatures()
+                        .includes(hoveredFeature)
+                )
                     return;
 
                 const featureName =
