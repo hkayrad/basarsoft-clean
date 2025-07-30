@@ -131,6 +131,10 @@
     </data>
     <!-- ___________ -->
 
+    <data name="RoadsFetchedSuccessfully" xml:space="preserve">
+        <value>Roads fetched successfully.</value>
+    </data>
+
     <!-- Database Messages-->
     <!-- Errore Messages -->
     <data name="DatabaseError" xml:space="preserve">

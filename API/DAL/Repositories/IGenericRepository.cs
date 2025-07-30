@@ -12,5 +12,4 @@ public interface IGenericRepository<T> where T : class
     Task<T> UpdateAsync(T entity);
     Task<bool> DeleteAsync(int id);
     Task<int> GetCountAsync(string? query);
-    Task<List<T>> GetByBoundingBoxAsync(double minX, double minY, double maxX, double maxY);
 }

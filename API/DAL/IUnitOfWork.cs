@@ -7,7 +7,8 @@ namespace API.DAL;
 
 public interface IUnitOfWork : IDisposable
 {
-    IGenericRepository<Feature> FeaturesRepository { get; }
+    FeaturesRepository FeaturesRepository { get; }
+    RoadsRepository RoadsRepository { get; }
 
     Task<int> SaveChangesAsync();
 

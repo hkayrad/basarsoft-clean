@@ -73,6 +73,7 @@ builder.Services.AddDbContext<MapInfoContext>(options =>
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IFeaturesService, PostgresqlFeaturesService>();
+builder.Services.AddScoped<IRoadsService, PostgresqlRoadsService>();
 
 
 var app = builder.Build();

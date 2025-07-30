@@ -9,15 +9,24 @@ namespace API.DAL;
 public class UnitOfWork(MapInfoContext context) : IUnitOfWork
 {
     private readonly MapInfoContext _context = context;
-    private IGenericRepository<Feature>? _featuresRepository;
+    private FeaturesRepository? _featuresRepository;
+    private RoadsRepository? _roadsRepository;
     private IDbContextTransaction? _transaction;
     private bool _disposed = false;
 
-    public IGenericRepository<Feature> FeaturesRepository
+    public FeaturesRepository FeaturesRepository
     {
         get
         {
             return _featuresRepository ??= new FeaturesRepository(_context);
+        }
+    }
+
+    public RoadsRepository RoadsRepository
+    {
+        get
+        {
+            return _roadsRepository ??= new RoadsRepository(_context);
         }
     }
 
