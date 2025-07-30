@@ -17,6 +17,7 @@ import SelectLayer from "./layers/SelectLayer";
 import EditLayer from "./layers/EditLayer";
 import TranslateLayer from "./layers/TranslateLayer";
 import ContextMenuLayer from "./layers/ContextMenuLayer";
+import type WebGLVectorLayer from "ol/layer/WebGLVector";
 
 export default function MapPage() {
     const mapRef = useRef<HTMLDivElement>(null!);
@@ -24,6 +25,7 @@ export default function MapPage() {
     const drawRef = useRef<Draw>(null!);
     const drawLayerRef = useRef<VectorLayer>(null!);
     const dataLayerRef = useRef<VectorLayer>(null!);
+    const roadLayerRef = useRef<WebGLVectorLayer>(null!);
 
     const [map, setMap] = useState<Map | null>(null);
     const [drawType, setDrawType] = useState<
@@ -32,6 +34,7 @@ export default function MapPage() {
     const [editType, setEditType] = useState<"Edit" | "Translate">("Edit");
     const [newFeatures, setNewFeatures] = useState<WktFeature[]>([]);
     const [wktFeatures, setWktFeatures] = useState<WktFeature[]>([]);
+    const [wktRoads, setWktRoads] = useState<WktFeature[]>([]);
     const [selectedFeatures, setSelectedFeatures] = useState<Feature[]>([]);
 
     const [isDrawMode, setIsDrawMode] = useState(false);
@@ -47,6 +50,7 @@ export default function MapPage() {
                 mapRef={mapRef}
                 setMap={setMap}
                 setWktFeatures={setWktFeatures}
+                setRoadFeatures={setWktRoads}
             >
                 <ContextMenuLayer
                     map={map}
@@ -60,9 +64,11 @@ export default function MapPage() {
                 <DataLayer
                     map={map}
                     wktFeatures={wktFeatures}
-                    setWktFeatures={setWktFeatures}
+                    wktRoads={wktRoads}
                     isFeatureLayerVisible={isFeatureLayerVisible}
+                    isRoadLayerVisible={isRoadLayerVisible}
                     dataLayerRef={dataLayerRef}
+                    roadLayerRef={roadLayerRef}
                 />
                 <ControlLayer
                     map={map}

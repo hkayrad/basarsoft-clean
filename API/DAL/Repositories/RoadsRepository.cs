@@ -12,7 +12,7 @@ public class RoadsRepository(MapInfoContext context) : GenericRepository<Road>(c
     public async Task<List<Road>> GetByBoundingBoxAsync(double minX, double minY, double maxX, double maxY)
     {
 
-        return await _context.Roads.FromSql($"SELECT * FROM roads WHERE wkt @ ST_MakeEnvelope({minX}, {minY}, {maxX}, {maxY}, 4326) ORDER BY id ASC LIMIT 2000 ")
+        return await _context.Roads.FromSql($"SELECT * FROM roads WHERE wkt @ ST_MakeEnvelope({minX}, {minY}, {maxX}, {maxY}, 4326) ORDER BY id ASC LIMIT 4000 ")
             .ToListAsync();
     }
 }

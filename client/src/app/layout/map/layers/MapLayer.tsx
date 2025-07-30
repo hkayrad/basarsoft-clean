@@ -15,6 +15,7 @@ import {
 } from "../../../../lib/api/features/get";
 import { useSearchParams } from "react-router";
 import { WKT } from "ol/format";
+import { getRoadsByBoundingBox } from "../../../../lib/api/roads/get";
 
 type Props = {
     map: Map | null;
@@ -22,10 +23,12 @@ type Props = {
     setMap: (map: Map | null) => void;
     children?: React.ReactNode;
     setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>;
+    setRoadFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>;
 };
 
 export default function MapLayer(props: Props) {
-    const { map, mapRef, setMap, children, setWktFeatures } = props;
+    const { map, mapRef, setMap, children, setWktFeatures, setRoadFeatures } =
+        props;
 
     const [gotoFeature, setGotoFeature] = useState<WktFeature | null>(null);
 
@@ -110,6 +113,14 @@ export default function MapLayer(props: Props) {
 
             getFeatureByBoundingBox(
                 setWktFeatures,
+                roundedExtent[0],
+                roundedExtent[1],
+                roundedExtent[2],
+                roundedExtent[3]
+            );
+
+            getRoadsByBoundingBox(
+                setRoadFeatures,
                 roundedExtent[0],
                 roundedExtent[1],
                 roundedExtent[2],
