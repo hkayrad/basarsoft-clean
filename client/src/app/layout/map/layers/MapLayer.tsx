@@ -10,7 +10,6 @@ import MousePosition from "ol/control/MousePosition";
 import { defaults as defaultControls, ZoomSlider } from "ol/control";
 import type { WktFeature as WktFeature } from "../../../../types";
 import {
-    getAllFeatures,
     getFeatureByBoundingBox,
     getFeatureById,
 } from "../../../../lib/api/features/get";

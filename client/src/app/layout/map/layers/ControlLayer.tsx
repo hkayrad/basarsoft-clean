@@ -8,14 +8,15 @@ import {
     Edit3,
     Check,
     X,
-    Eye,
-    EyeClosed,
     Layers2,
     ChevronRight,
     Undo,
     Move,
     Pencil,
     Save,
+    MapPinOff,
+    RouteOff,
+    Route,
 } from "lucide-react";
 import type VectorSource from "ol/source/Vector";
 import { useState } from "react";
@@ -39,6 +40,8 @@ type Props = {
     drawSourceRef: React.RefObject<VectorSource>;
     isFeatureLayerVisible: boolean;
     setIsFeatureLayerVisible: (isVisible: boolean) => void;
+    isRoadLayerVisible: boolean;
+    setIsRoadLayerVisible: (isVisible: boolean) => void;
     drawRef: React.RefObject<Draw>;
     setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>;
 };
@@ -59,6 +62,8 @@ export default function ControlLayer(props: Props) {
         drawSourceRef,
         isFeatureLayerVisible,
         setIsFeatureLayerVisible,
+        isRoadLayerVisible,
+        setIsRoadLayerVisible,
         drawRef,
         setWktFeatures,
     } = props;
@@ -104,6 +109,10 @@ export default function ControlLayer(props: Props) {
 
     const handleFeatureLayerToggle = () => {
         setIsFeatureLayerVisible(!isFeatureLayerVisible);
+    };
+
+    const handleRoadLayerToggle = () => {
+        setIsRoadLayerVisible(!isRoadLayerVisible);
     };
 
     const handleUndoDrawing = () => {
@@ -163,20 +172,25 @@ export default function ControlLayer(props: Props) {
     const renderDataControls = () => (
         <div className="control-category">
             <span className="category-label">Data</span>
-            <button
-                id="toggle-feature-layer"
-                onClick={handleFeatureLayerToggle}
-            >
-                {isFeatureLayerVisible ? (
-                    <>
-                        <Eye size={16} /> Hide Data
-                    </>
-                ) : (
-                    <>
-                        <EyeClosed size={16} /> Show Data
-                    </>
-                )}
-            </button>
+            <div id="layer-controls">
+                <button
+                    id="toggle-feature-layer"
+                    onClick={handleFeatureLayerToggle}
+                >
+                    {isFeatureLayerVisible ? (
+                        <MapPin size={16} />
+                    ) : (
+                        <MapPinOff size={16} />
+                    )}
+                </button>
+                <button id="toggle-road-layer" onClick={handleRoadLayerToggle}>
+                    {isRoadLayerVisible ? (
+                        <Route size={16} />
+                    ) : (
+                        <RouteOff size={16} />
+                    )}
+                </button>
+            </div>
         </div>
     );
 

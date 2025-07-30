@@ -48,6 +48,14 @@
   border-color: #8a8a8a;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
+#controls #layer-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+#controls #layer-controls button {
+  width: 100%;
+}
 #controls #draw-select,
 #controls #edit-type-select {
   display: flex;

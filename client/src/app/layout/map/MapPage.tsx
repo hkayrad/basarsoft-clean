@@ -37,6 +37,7 @@ export default function MapPage() {
     const [isDrawMode, setIsDrawMode] = useState(false);
     const [isFreehand, setIsFreehand] = useState(false);
     const [isFeatureLayerVisible, setIsFeatureLayerVisible] = useState(true);
+    const [isRoadLayerVisible, setIsRoadLayerVisible] = useState(true);
     const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
 
     return (
@@ -78,6 +79,8 @@ export default function MapPage() {
                     drawSourceRef={drawSourceRef}
                     isFeatureLayerVisible={isFeatureLayerVisible}
                     setIsFeatureLayerVisible={setIsFeatureLayerVisible}
+                    isRoadLayerVisible={isRoadLayerVisible}
+                    setIsRoadLayerVisible={setIsRoadLayerVisible}
                     drawRef={drawRef}
                     setWktFeatures={setWktFeatures}
                 />

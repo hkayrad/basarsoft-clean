@@ -116,7 +116,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public async Task<List<T>> GetByBoundingBoxAsync(double minX, double minY, double maxX, double maxY)
     {
         // Assuming T has properties X and Y for bounding box filtering
-        return await _dbSet.FromSql($"SELECT * FROM features WHERE wkt @ ST_MakeEnvelope({minX}, {minY}, {maxX}, {maxY}, 4326) ORDER BY id ASC LIMIT 1000 ")
+        return await _dbSet.FromSql($"SELECT * FROM features WHERE wkt @ ST_MakeEnvelope({minX}, {minY}, {maxX}, {maxY}, 4326) ORDER BY id ASC LIMIT 2000 ")
             .ToListAsync();
     }
 

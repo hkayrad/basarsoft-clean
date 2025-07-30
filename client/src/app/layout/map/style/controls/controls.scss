@@ -36,7 +36,6 @@ $transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
     min-width: 220px;
     transition: all $transition-smooth;
 
-    // Dark theme button styling
     button {
         padding: 10px 18px;
         border-radius: $border-radius;
@@ -71,6 +70,16 @@ $transition-smooth: 0.3s cubic-bezier(0.2, 0, 0, 1);
             border-color: $color-lightest-border;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2),
                 0 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+    }
+
+    #layer-controls {
+        display: flex;
+        justify-content: space-between;
+        gap: $gap-medium;
+
+        button {
+            width: 100%;
         }
     }
 
