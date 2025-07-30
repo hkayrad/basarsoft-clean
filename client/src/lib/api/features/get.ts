@@ -19,7 +19,7 @@ const getAllFeatures = async (setWktFeatures: React.Dispatch<React.SetStateActio
     }
 }
 
-const getFeatureByBoundingBox = async (minX: number, minY: number, maxX: number, maxY: number) => {
+const getFeatureByBoundingBox = async (setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>, minX: number, minY: number, maxX: number, maxY: number) => {
     try {
         const response = await agent.get("/features/getByBoundingBox", {
             params: {
@@ -29,7 +29,7 @@ const getFeatureByBoundingBox = async (minX: number, minY: number, maxX: number,
                 maxY
             },
         });
-        return response.data.data;
+        setWktFeatures(response.data.data);
     } catch (error) {
         console.error("Error fetching features by bounding box:", error);
         throw error;
