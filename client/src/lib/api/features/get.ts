@@ -63,5 +63,6 @@ const getFeatureById = async (id: number) => {
 export {
     getAllFeatures,
     getFeatureCount,
-    getFeatureById
+    getFeatureById,
+    getFeatureByBoundingBox
 }

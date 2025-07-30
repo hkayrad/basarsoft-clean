@@ -5,7 +5,7 @@ import Map from "ol/Map";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { WktFeature } from "../../../../types";
 import { deleteFeature } from "../../../../lib/api/features/delete";
-import { getAllFeatures } from "../../../../lib/api/features/get";
+import { getFeatureByBoundingBox } from "../../../../lib/api/features/get";
 import EditFeatureModal from "../../../shared/EditFeatureModal";
 import { WKT } from "ol/format";
 import { updateFeature } from "../../../../lib/api/features/put";
@@ -88,7 +88,15 @@ export default function ContextMenuLayer(props: Props) {
         } catch (error) {
             console.error("Error deleting features:", error);
         } finally {
-            getAllFeatures(setWktFeatures);
+            const extent = map!.getView().calculateExtent(map!.getSize());
+
+            getFeatureByBoundingBox(
+                setWktFeatures,
+                extent[0],
+                extent[1],
+                extent[2],
+                extent[3]
+            );
             setSelectedFeatures([]);
             setIsContextMenuOpen(false);
         }
@@ -97,6 +105,7 @@ export default function ContextMenuLayer(props: Props) {
         setIsContextMenuOpen,
         setSelectedFeatures,
         setWktFeatures,
+        map,
     ]);
 
     const handleEditFeature = () => {
@@ -131,7 +140,15 @@ export default function ContextMenuLayer(props: Props) {
         console.log("Saving feature:", id, feature);
 
         await updateFeature(id, feature);
-        await getAllFeatures(setWktFeatures);
+        const extent = map!.getView().calculateExtent(map!.getSize());
+
+        await getFeatureByBoundingBox(
+            setWktFeatures,
+            extent[0],
+            extent[1],
+            extent[2],
+            extent[3]
+        );
         setIsModalOpen(false);
         setEditingFeature(null);
         setSelectedFeatures([]);

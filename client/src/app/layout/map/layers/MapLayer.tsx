@@ -11,6 +11,7 @@ import { defaults as defaultControls, ZoomSlider } from "ol/control";
 import type { WktFeature as WktFeature } from "../../../../types";
 import {
     getAllFeatures,
+    getFeatureByBoundingBox,
     getFeatureById,
 } from "../../../../lib/api/features/get";
 import { useSearchParams } from "react-router";
@@ -109,7 +110,15 @@ export default function MapLayer(props: Props) {
             const roundedExtent = extent.map(
                 (coord) => Math.round(coord * 10000) / 10000
             );
-            console.table({extent, roundedExtent});
+            console.log("Current extent:", roundedExtent);
+            
+            getFeatureByBoundingBox(
+                setWktFeatures,
+                roundedExtent[0],
+                roundedExtent[1],
+                roundedExtent[2],
+                roundedExtent[3]
+            );
         });
 
         setMap(map);

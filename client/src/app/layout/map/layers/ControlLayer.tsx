@@ -21,7 +21,7 @@ import type VectorSource from "ol/source/Vector";
 import { useState } from "react";
 import type Draw from "ol/interaction/Draw";
 import type { WktFeature } from "../../../../types";
-import { getAllFeatures } from "../../../../lib/api/features/get";
+import { getFeatureByBoundingBox } from "../../../../lib/api/features/get";
 import { addFeature } from "../../../../lib/api/features/post";
 
 type Props = {
@@ -126,7 +126,16 @@ export default function ControlLayer(props: Props) {
 
             try {
                 addFeature(featureData).then(() => {
-                    getAllFeatures(setWktFeatures);
+                    const extent = map!
+                        .getView()
+                        .calculateExtent(map!.getSize());
+                    getFeatureByBoundingBox(
+                        setWktFeatures,
+                        extent[0],
+                        extent[1],
+                        extent[2],
+                        extent[3]
+                    );
                 });
             } catch (error) {
                 console.error("Error saving feature:", error);
