@@ -98,11 +98,19 @@ export default function MapLayer(props: Props) {
         const map = new Map({
             target: mapRef.current,
             view: view,
-            layers: [turkeyLayer, eskisehirLayer, tileLayer],
+            layers: [eskisehirLayer, turkeyLayer, tileLayer],
             controls: defaultControls().extend([mousePosControl, zoomSlider]),
         });
 
         getAllFeatures(setWktFeatures);
+
+        map.on("moveend", () => {
+            const extent = map.getView().calculateExtent(map.getSize());
+            const roundedExtent = extent.map(
+                (coord) => Math.round(coord * 10000) / 10000
+            );
+            console.table({extent, roundedExtent});
+        });
 
         setMap(map);
 

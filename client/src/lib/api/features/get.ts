@@ -1,7 +1,7 @@
 import type { WktFeature } from "../../../types";
 import agent from "../agent"
 
-const getAllFeatures = async (setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>, pageSize?: number, pageNumber?: number, query?: string, sortBy?: string, sortOrder?: string) => {
+const getAllFeatures = async (setWktFeatures: React.Dispatch<React.SetStateAction<WktFeature[]>>, pageSize: number = 5000, pageNumber: number = 1, query?: string, sortBy?: string, sortOrder?: string) => {
     try {
         const response = await agent.get("/features", {
             params: {
@@ -15,6 +15,23 @@ const getAllFeatures = async (setWktFeatures: React.Dispatch<React.SetStateActio
         setWktFeatures(response.data.data);
     } catch (error) {
         console.error("Error fetching features:", error);
+        throw error;
+    }
+}
+
+const getFeatureByBoundingBox = async (minX: number, minY: number, maxX: number, maxY: number) => {
+    try {
+        const response = await agent.get("/features/getByBoundingBox", {
+            params: {
+                minX,
+                minY,
+                maxX,
+                maxY
+            },
+        });
+        return response.data.data;
+    } catch (error) {
+        console.error("Error fetching features by bounding box:", error);
         throw error;
     }
 }
