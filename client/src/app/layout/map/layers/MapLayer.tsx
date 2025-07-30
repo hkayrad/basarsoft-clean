@@ -103,15 +103,12 @@ export default function MapLayer(props: Props) {
             controls: defaultControls().extend([mousePosControl, zoomSlider]),
         });
 
-        getAllFeatures(setWktFeatures);
-
         map.on("moveend", () => {
             const extent = map.getView().calculateExtent(map.getSize());
             const roundedExtent = extent.map(
                 (coord) => Math.round(coord * 10000) / 10000
             );
-            console.log("Current extent:", roundedExtent);
-            
+
             getFeatureByBoundingBox(
                 setWktFeatures,
                 roundedExtent[0],
