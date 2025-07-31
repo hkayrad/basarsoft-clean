@@ -21,7 +21,7 @@ export default function SelectLayer(props: Props) {
         const clickSelect = new Select({
             condition: click,
             multi: true,
-            filter: (feature, layer) => {
+            filter: (_feature, layer) => {
                 return layer === dataLayerRef.current;
             },
         });
