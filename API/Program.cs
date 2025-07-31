@@ -64,9 +64,14 @@ builder.Services.AddSwaggerGen(config =>
     config.SwaggerDoc("v1", new OpenApiInfo { Title = "Basarsoft API", Version = "v1" });
 });
 
+string? postgresqlConnectionString = Environment.GetEnvironmentVariable("POSTGRESQL_CONNECTION_STRING");
+
+if (string.IsNullOrEmpty(postgresqlConnectionString))
+    throw new InvalidOperationException("POSTGRESQL_CONNECTION_STRING environment variable is not set.");
+
 builder.Services.AddDbContext<MapInfoContext>(options =>
     options.UseNpgsql(
-        builder.Configuration.GetConnectionString("PostgresqlConnection"),
+        postgresqlConnectionString,
         opts => opts.UseNetTopologySuite()
     )
 );
